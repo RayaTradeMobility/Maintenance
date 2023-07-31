@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/stockModel.dart';
 
+import '../Constants/Constants.dart';
+
 class StockScreen extends StatefulWidget {
   final String siteRequestId;
   const StockScreen({Key? key, required this.siteRequestId}) : super(key: key);
@@ -18,14 +20,14 @@ class StockScreenState extends State<StockScreen> {
   void initState() {
     _futureData=  api.fetchStock(widget.siteRequestId);
     super.initState();
-
   }
   @override
       Widget build(BuildContext context) {
         return Scaffold(
           backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
+
           appBar: AppBar(
-            backgroundColor: const Color.fromRGBO(59, 60, 54,20),
+            backgroundColor: MyColorsSample.primary.withOpacity(0.8)    ,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
             ),
@@ -33,6 +35,7 @@ class StockScreenState extends State<StockScreen> {
             title: const Text("المخزن"),
             centerTitle: true,
           ),
+
           body: FutureBuilder<StockModel>(
             future: _futureData,
             builder: (context, snapshot) {
@@ -44,7 +47,7 @@ class StockScreenState extends State<StockScreen> {
                     final stocking = stockModel.stock![index];
 
                     return Card(
-                        child: productCard(
+                        child: CustomerCard(
                             stocking.partNumber!,
                             stocking.spareDescription!,
                             stocking.currentQty!,
@@ -92,7 +95,7 @@ class StockScreenState extends State<StockScreen> {
                       ' جاري تحميل البيانات',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.red,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -109,56 +112,69 @@ class StockScreenState extends State<StockScreen> {
       }
 }
 
-Widget productCard(
-    String partNumber,
-    String spareDescription,
-    String currentQty,
-    ) {
+class CustomerCard extends StatelessWidget {
+  final String partNumber;
+  final String spareDescription;
+  final String currentQty;
+  const CustomerCard( this.partNumber, this.spareDescription, this.currentQty , {super.key,
+  });
 
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 12,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
 
-    ),
-    color: Colors.white,shadowColor: Colors.black.withOpacity(0.2), clipBehavior: Clip.antiAliasWithSaveLayer,
-surfaceTintColor: Colors.green,
-    elevation: 54.0,
-    child: SizedBox(
-      height: 85.0,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Part Number: ${partNumber.trim()} ',
-                  style: const TextStyle(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  'Spare Description: ${spareDescription.trim()}',
-                  style: const TextStyle(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  'Current Quantity: ${currentQty.trim()}',
-                  style: const TextStyle(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.w600,
+      ),
+      color: MyColorsSample.primaryDark.withOpacity(0.5),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  "assets/card.png",height: 50, width: 50),
+                Container(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(height: 5),
+                      Text(
+                        "Part Number: $partNumber" ,
+                        style: MyTextSample.button(context)!.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(height: 10),
+                      Text(
+                        "Spare Description: ${spareDescription.toLowerCase()}",
+                        style: MyTextSample.body1(context)!.copyWith(
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
+                      Container(height: 10),
+                      Text(
+                        "Current Quantity: $currentQty",
+                        maxLines: 2,
+                        style: MyTextSample.subhead(context)!.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    ),
-  );
+          ),
+        ],
+      )
+    );
+      }
 }
+

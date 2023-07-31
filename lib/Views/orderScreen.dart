@@ -80,7 +80,8 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                       ),
                     ),
                   );
-                });
+                }
+                );
               }
               else {
                 setState(() {

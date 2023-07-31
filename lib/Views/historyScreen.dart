@@ -2,23 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/historyModel.dart';
-// ignore: depend_on_referenced_packages
+
+import '../Constants/Constants.dart';
 
 class HistoryScreen extends StatefulWidget {
   final String siteRequestId;
 
   const HistoryScreen({
-    Key? key, required this.siteRequestId,
-
-  }) : super(key: key);
+    Key? key, required this.siteRequestId}) : super(key: key);
 
   @override
   HistoryScreenState createState() => HistoryScreenState();
 }
 class HistoryScreenState extends State<HistoryScreen> {
   late Future<HistoryModel> _futureData;
-
   API api = API();
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +29,7 @@ class HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
         appBar: AppBar(
-          backgroundColor: const Color.fromRGBO(59, 60, 54,20),
+          backgroundColor: MyColorsSample.primary.withOpacity(0.8)    ,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
           ),
@@ -53,7 +52,7 @@ class HistoryScreenState extends State<HistoryScreen> {
               children: [
                 Text(
                   "اجمالي الصيانه اليوم : ${historyModel!
-                      .sumMaintenanceAmount}" ,
+                      .sumMaintenanceAmount} جنيه" ,
                   style: const TextStyle(fontStyle:FontStyle.normal ,
                   color: Colors.black , fontWeight: FontWeight.w600),
                 ),
@@ -62,11 +61,11 @@ class HistoryScreenState extends State<HistoryScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: historyModel!.orders!.length,
+              itemCount: historyModel.orders!.length,
               itemBuilder: (context, index) {
                 final order = historyModel.orders![index];
                 return Card(
-                  child: productCard(
+                  child: CustomerCard(
                     order.workOrderID!,
                     order.workStatus!,
                     order.maintenanceAmount!,
@@ -79,6 +78,7 @@ class HistoryScreenState extends State<HistoryScreen> {
         ],
       );
     }
+
             else  if (snapshot.hasError){
               return Center(
                 child: Column(
@@ -104,6 +104,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                 ),
               );
             }
+
             else{
               return Center(child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -118,7 +119,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                     ' جاري تحميل البيانات',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.red,
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -132,57 +133,86 @@ class HistoryScreenState extends State<HistoryScreen> {
         ),
     );
   }
+}
+class CustomerCard extends StatelessWidget {
+  final String workOrderID;
+  final String workStatus;
+  final String maintenanceAmount;
+  final String maintenanceFinishTime;
+  const CustomerCard(this.workOrderID,this.workStatus,this.maintenanceAmount,this.maintenanceFinishTime,
+      {super.key}
+  );
 
-  Widget productCard(String workOrderID, workStatus, maintenanceAmount, maintenanceFinishTime) {
+  @override
+  Widget build(BuildContext context) {
     return Card(
-      color: Colors.white70,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      elevation: 10.0,
-      child: SizedBox(
-        height: 120.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+        elevation: 12,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
 
-                  Text(
-                    'Work Order ID: ${workOrderID.trim()} ',
-                    style: const TextStyle(
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w600,
+        ),
+        color: MyColorsSample.primaryDark.withOpacity(0.5),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                      "assets/icon.png",height: 30, width: 30),
+                  Container(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(height: 5),
+                        Text(
+                          "Work Order ID: $workOrderID" ,
+                          style: MyTextSample.button(context)!.copyWith(
+                            color: Colors.white,
+                              fontSize: 12
+
+                          ),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Work Status: ${workStatus.toLowerCase()}",
+                          style: MyTextSample.body1(context)!.copyWith(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 12
+                          ),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Maintenance Amount: $maintenanceAmount",
+                          maxLines: 2,
+                          style: MyTextSample.subhead(context)!.copyWith(
+                            color: Colors.white,
+                              fontSize: 12
+                          ),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Maintenance Total Amount: $maintenanceFinishTime",
+                          maxLines: 2,
+                          style: MyTextSample.subhead(context)!.copyWith(
+                            color: Colors.white,
+                              fontSize: 12
+
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    'Work Status: ${workStatus.trim()}',
-                    style: const TextStyle(
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w600,
-                    ),),
-                  Text(
-                    'Maintenance Amount: ${maintenanceAmount.trim()}',
-                    style: const TextStyle(
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'Maintenance Finish Time: ${maintenanceFinishTime.trim()} ',
-                    style: const TextStyle(
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w600,
-                    ),),
                 ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          ],
+        )
     );
   }
 }
+
