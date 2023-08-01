@@ -86,12 +86,8 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
               else {
                 setState(() {
                   customIcon = const Icon(Icons.search);
-                  customSearchBar = const Text('اذونات التسليم');
                 });
-
               }
-
-
             },
             icon: customIcon,
           )
@@ -117,7 +113,6 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
 
                   isScrollable: false,
                   controller: _tabController,
-                  // give the indicator a decoration (color and border radius)
                   indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                       25.0,
@@ -126,16 +121,14 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black,
-
                   tabs: const [
-                    Tab(
-                      text: 'تصليح',
-                    ),
-
                     Tab(
                       text: 'تركيب',
                     ),
 
+                    Tab(
+                      text: 'تصليح',
+                    ),
                   ],
                 ),
               ),
@@ -143,6 +136,32 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                 child: TabBarView(
                   controller: _tabController,
                   children: [
+                    RefreshIndicator(
+                      key: _refreshIndicatorKey,
+                      onRefresh: () async {
+                        _refreshIndicatorKey.currentState?.show();
+                        setState(() {});
+                      },
+                      child:  SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Column(
+                            children: [ GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              mainAxisSpacing: 10.0,
+                              crossAxisSpacing: 10.0,
+                              childAspectRatio: 1 / 0.5,
+                              crossAxisCount: 1,
+                              children:
+                              List.generate(8, (index) => const CustomCard()),
+                            ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
                     RefreshIndicator(
                       key: _refreshIndicatorKey2,
                       onRefresh: () async {
@@ -162,31 +181,6 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                           )),
                     ),
                     // second tab bar view widget
-                    RefreshIndicator(
-                      key: _refreshIndicatorKey,
-                      onRefresh: () async {
-                        _refreshIndicatorKey.currentState?.show();
-                        setState(() {});
-                      },
-                      child:  SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Column(
-                              children: [ GridView.count(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                mainAxisSpacing: 10.0,
-                                crossAxisSpacing: 10.0,
-                                childAspectRatio: 1 / 0.5,
-                                crossAxisCount: 1,
-                                children:
-                                List.generate(8, (index) => const CustomCard()),
-                              ),
-                              ],
-                            ),
-                          ),
-                      ),
-                    ),
                   ],
                 ),
               ),

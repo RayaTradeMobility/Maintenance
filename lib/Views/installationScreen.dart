@@ -102,6 +102,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                       Collapsible(
                         collapsed: _collapse,
                         axis: CollapsibleAxis.vertical,
+                        minOpacity: 0.2,
                         alignment: Alignment.bottomLeft,
                         child: const Column(
                           children: [
@@ -410,7 +411,6 @@ class AlertDialogPage extends StatefulWidget {
   @override
   AlertDialogPageState createState() => AlertDialogPageState();
 }
-
 class AlertDialogPageState extends State<AlertDialogPage> {
   TextEditingController indoorController = TextEditingController();
   TextEditingController outdoorController = TextEditingController();
@@ -495,7 +495,6 @@ class UploadImageButton extends StatefulWidget {
   @override
   UploadImageButtonState createState() => UploadImageButtonState();
 }
-
 class UploadImageButtonState extends State<UploadImageButton> {
   final picker = ImagePicker();
   final List<File> _pickedFiles = [];

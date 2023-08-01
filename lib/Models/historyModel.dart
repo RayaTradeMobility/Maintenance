@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class HistoryModel {
   String? sumMaintenanceAmount;
   List<Orders>? orders;
