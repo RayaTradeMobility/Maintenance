@@ -4,41 +4,39 @@ import 'package:maintenance/Views/installationScreen.dart';
 class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key}) : super(key: key);
 
-
   @override
   State<OrderScreen> createState() => _OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStateMixin{
+class _OrderScreenState extends State<OrderScreen>
+    with SingleTickerProviderStateMixin {
   Widget customSearchBar = const Text("الطلبات");
   Icon customIcon = const Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
-   TabController? _tabController ;
+  TabController? _tabController;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey2 =
-  GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
   }
+
   @override
   void dispose() {
     super.dispose();
     _tabController?.dispose();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(59, 60, 54,20),
+        backgroundColor: const Color.fromRGBO(59, 60, 54, 20),
         title: customSearchBar,
         centerTitle: true,
         automaticallyImplyLeading: true,
@@ -50,11 +48,11 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                   customIcon = const Icon(Icons.cancel);
                   customSearchBar = ListTile(
                     leading: IconButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            return  const Scaffold();
+                            return const Scaffold();
                           }),
                         );
                       },
@@ -80,10 +78,8 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                       ),
                     ),
                   );
-                }
-                );
-              }
-              else {
+                });
+              } else {
                 setState(() {
                   customIcon = const Icon(Icons.search);
                 });
@@ -96,7 +92,6 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -110,7 +105,6 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                   ),
                 ),
                 child: TabBar(
-
                   isScrollable: false,
                   controller: _tabController,
                   indicator: BoxDecoration(
@@ -125,7 +119,6 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                     Tab(
                       text: 'تركيب',
                     ),
-
                     Tab(
                       text: 'تصليح',
                     ),
@@ -142,20 +135,21 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                         _refreshIndicatorKey.currentState?.show();
                         setState(() {});
                       },
-                      child:  SingleChildScrollView(
+                      child: SingleChildScrollView(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Column(
-                            children: [ GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              mainAxisSpacing: 10.0,
-                              crossAxisSpacing: 10.0,
-                              childAspectRatio: 1 / 0.5,
-                              crossAxisCount: 1,
-                              children:
-                              List.generate(8, (index) => const CustomCard()),
-                            ),
+                            children: [
+                              GridView.count(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                mainAxisSpacing: 10.0,
+                                crossAxisSpacing: 10.0,
+                                childAspectRatio: 1 / 0.5,
+                                crossAxisCount: 1,
+                                children: List.generate(
+                                    8, (index) => const CustomCard()),
+                              ),
                             ],
                           ),
                         ),
@@ -166,19 +160,15 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
                       key: _refreshIndicatorKey2,
                       onRefresh: () async {
                         _refreshIndicatorKey2.currentState?.show();
-                        setState(() {
-                        });
+                        setState(() {});
                       },
-
-                      child:  const SingleChildScrollView(
+                      child: const SingleChildScrollView(
                           child: Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: Column(
-                              children: [ Text("Data")
-
-                              ],
-                            ),
-                          )),
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          children: [Text("Data")],
+                        ),
+                      )),
                     ),
                     // second tab bar view widget
                   ],
@@ -191,6 +181,7 @@ class _OrderScreenState extends State<OrderScreen> with SingleTickerProviderStat
     );
   }
 }
+
 class CustomCard extends StatelessWidget {
   const CustomCard({
     Key? key,
@@ -198,123 +189,136 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  GestureDetector(
-      onTap: (){
+    return GestureDetector(
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const InstallationScreen()),
         );
       },
-      child:  Card(
+      child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-
           clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children:[
-            Text(':الاسم الاول', style: TextStyle(color: Colors.black),),
-                SizedBox(
-                  width: 5.0,
-                ),
-            Icon(
-              Icons.account_circle,
-              color: Colors.grey,
-            ),
-              ]
-          ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(':الاسم الاخير', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.account_box_rounded,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(':رقم الموبايل', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.mobile_friendly,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(':المدينه', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.location_city,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(':المنطقه', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.zoom_out,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(':العنوان', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.location_on,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children:[
-                  Text(': العطل', style: TextStyle(color: Colors.black),),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Icon(
-                    Icons.tire_repair,
-                    color: Colors.grey,
-                  ),
-                ]
-            ),          ],
-        )
-      ),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':الاسم الاول',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.account_circle,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':الاسم الاخير',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.account_box_rounded,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':رقم الموبايل',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.mobile_friendly,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':المدينه',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.location_city,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':المنطقه',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.zoom_out,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':العنوان',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ': العطل',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.tire_repair,
+                      color: Colors.grey,
+                    ),
+                  ]),
+            ],
+          )),
     );
   }
 }
