@@ -1,5 +1,8 @@
 import 'package:collapsible/collapsible.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class InstallationScreen extends StatefulWidget {
   const InstallationScreen({Key? key}) : super(key: key);
@@ -35,6 +38,11 @@ class _InstallationScreenState extends State<InstallationScreen> with SingleTick
           ElevatedButton(
             onPressed: () {
 
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return  const AlertDialogPage();
+                  });
             },
             style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white, backgroundColor: Colors.grey),
@@ -396,39 +404,245 @@ class _InstallationScreenState extends State<InstallationScreen> with SingleTick
           ),
         ],
       ),
+    ],
+    ),
+    ),
+    ],
+    ),
+    ),
+    ),
+    ],
+    )
+    ),
+    ),
+    ),
+    );
+  }
+}
 
-       // Row(
-       //   children: [
-       //     const SizedBox(
-       //       width: 5.0,
-       //     ),
-       //     const Text(
-       //       ':ملاحظه ',
-       //       style: TextStyle(
-       //           color: Colors.black,
-       //           fontWeight: FontWeight.bold),
-       //     ),
-       //     TextFormField(
-       //       controller: commentController,
-       //       decoration: const InputDecoration(
-       //         labelText: ' Comment',
-       //       ),
-       //       onChanged: (value) {},
-       //     ),
-       //   ],
-       // ),
 
-    ],
-    ),
-    ),
-    ],
-    ),
-    ),
-    ),
-    ],
-    )),
-    ),
-    ),
+class AlertDialogPage extends StatefulWidget {
+  const AlertDialogPage({super.key});
+
+  @override
+  AlertDialogPageState createState() => AlertDialogPageState();
+}
+
+class AlertDialogPageState extends State<AlertDialogPage> {
+  TextEditingController indoorController = TextEditingController();
+  TextEditingController outdoorController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
+
+  get filePicker => null;
+
+  @override
+  void dispose() {
+    indoorController.dispose();
+    outdoorController.dispose();
+    commentController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Center(child: Text('طلب')),
+      icon: InkWell(child:GestureDetector( onTap: (){Navigator.pop(context);},
+          child: const Icon(Icons.close ,color: Colors.black,))),
+      iconPadding: const EdgeInsets.only(left: 220 , top: 20),
+      // icon: const Icon(Icons.close , color: Colors.red),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+
+          TextField(
+            controller: indoorController,
+            decoration: const InputDecoration(
+              hintText: 'السريال الداخلي',
+            ),
+          ),
+          TextField(
+            controller: outdoorController,
+            decoration: const InputDecoration(
+              hintText: 'السريال الخارجي',
+            ),
+          ),
+          TextField(
+            controller: commentController,
+            decoration: const InputDecoration(
+              hintText: 'ملاحظه',
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+              children: [
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                builder: (context) {
+                  return const UploadImageButton();
+                }, context: context,
+              );
+            },
+            child: const Text('تحميل الصور'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+
+              Navigator.of(context).pop();
+            },
+            child: const Text('ارسال الطلب'),
+          ),
+            ]
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+
+class UploadImageButton extends StatefulWidget {
+  final Function(List<File>)? onImageSelected;
+
+  const UploadImageButton({Key? key, this.onImageSelected}) : super(key: key);
+
+  @override
+  UploadImageButtonState createState() => UploadImageButtonState();
+}
+
+class UploadImageButtonState extends State<UploadImageButton> {
+  final picker = ImagePicker();
+  final List<File> _pickedFiles = [];
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        if (_pickedFiles.length < 5) {
+          _pickedFiles.add(File(pickedFile.path));
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: "لا يمكن ارسال اكثر من 5 ",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0,
+          );
+        }
+      });
+      if (widget.onImageSelected != null) {
+        widget.onImageSelected!(_pickedFiles);
+      }
+    }
+  }
+
+  void _deleteImage(int index) {
+    setState(() {
+      _pickedFiles.removeAt(index);
+    });
+    if (widget.onImageSelected != null) {
+      widget.onImageSelected!(_pickedFiles);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar:Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () => _pickImage(ImageSource.camera), style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.black, backgroundColor: Colors.white),
+            child: const Text('من الكاميرا'),
+          ),
+          const SizedBox(
+            width: 100,
+          ),
+          ElevatedButton(
+
+            onPressed: () => _pickImage(ImageSource.gallery),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white),
+    child: const Text("من الاستوديو")
+          ),
+        ],
+      ),
+
+      backgroundColor: Colors.grey,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 15,
+                    left: 25,
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.done),
+                  ),
+                ),
+              ],
+            ),
+            if (_pickedFiles.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _pickedFiles.length,
+                  itemBuilder: (context, index) {
+                    return Stack(
+                      children: [
+                        Center(
+                          child: Image.file(
+                            _pickedFiles[index],
+                            fit: BoxFit.contain,
+                            height: 120,
+                            width: 120,
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () => _deleteImage(index),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+            else
+              Container(
+                height: 500.0,
+                color: Colors.white,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

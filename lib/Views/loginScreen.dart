@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -261,15 +262,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         LoginModel user = await api.login(
                             emailController.text, passwordController.text);
 
-                        if (user != null) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>  HomePage(siteRequestId: user.siteRequestId),
-                            ),
-                          );
-                        }
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  HomePage(siteRequestId: user.siteRequestId),
+                          ),
+                        );
                       } catch (e) {
                         Fluttertoast.showToast(
                           msg: "Invalid Username Or Password",
