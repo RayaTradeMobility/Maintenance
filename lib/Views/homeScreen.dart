@@ -1,8 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:maintenance/Views/historyScreen.dart';
 import 'package:maintenance/Views/orderScreen.dart';
 import 'package:maintenance/Views/stockScreen.dart';
-
 
 class HomePage extends StatefulWidget {
   final String siteRequestId;
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
   }
+
   // ignore: slash_for_doc_comments
   @override
   Widget build(BuildContext context) {
@@ -41,61 +43,59 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const Padding(
                 padding: EdgeInsets.all(5.0),
               ),
-        Center(
-          child: SizedBox(
-            width: 190,
-                height: 190,
-                child: CustomCard(
-                  image: 'assets/order.png',
-                  text: 'الطلبات',
-                  onPressed: () {
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>  const OrderScreen()),
-                    );
-                  },
+              Center(
+                child: SizedBox(
+                  width: 190,
+                  height: 190,
+                  child: CustomCard(
+                    image: 'assets/order.png',
+                    text: 'الطلبات',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const OrderScreen()),
+                      );
+                    },
+                  ),
                 ),
-
-      ),
-        ),
-
-               GridView.count(
+              ),
+              GridView.count(
                   shrinkWrap: true,
                   mainAxisSpacing: 30.0,
                   crossAxisSpacing: 30.0,
                   childAspectRatio: 1 / 1.35,
                   crossAxisCount: 2,
                   children: [
-
-                      CustomCard(
-                        image: 'assets/history.png',
-                        text: 'السجل',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (
-                                context) => HistoryScreen(siteRequestId: widget.siteRequestId,),
+                    CustomCard(
+                      image: 'assets/history.png',
+                      text: 'السجل',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HistoryScreen(
+                              siteRequestId: widget.siteRequestId,
                             ),
-                          );
-                        },
-                        // ignore: unrelated_type_equality_checks
-                      ),
-
-                      CustomCard(
-                        image: 'assets/stockbox.png',
-                        text: 'المخزن',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>   StockScreen(siteRequestId: widget.siteRequestId,)),
-                          );
-                        },
-                      ),
-
-                  ]
-              )
-
+                          ),
+                        );
+                      },
+                      // ignore: unrelated_type_equality_checks
+                    ),
+                    CustomCard(
+                      image: 'assets/stockbox.png',
+                      text: 'المخزن',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StockScreen(
+                                    siteRequestId: widget.siteRequestId,
+                                  )),
+                        );
+                      },
+                    ),
+                  ])
             ],
           ),
         ),
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 }
+
 class CustomCard extends StatelessWidget {
   const CustomCard({
     Key? key,
@@ -119,7 +120,6 @@ class CustomCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shadowColor: Colors.grey,
       color: Colors.white.withOpacity(0.7),
@@ -137,7 +137,11 @@ class CustomCard extends StatelessWidget {
             ),
             Text(
               text,
-              style: const TextStyle(color: Colors.black,fontSize: 16,fontStyle: FontStyle.italic, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),

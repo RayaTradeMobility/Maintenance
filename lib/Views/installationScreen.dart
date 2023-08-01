@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:collapsible/collapsible.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -73,13 +75,16 @@ class _InstallationScreenState extends State<InstallationScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Center(
-                            child: Text(
-                              'بيانات العميل ',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 21),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                'بيانات العميل ',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 21),
+                              ),
                             ),
                           ),
                           IconButton(
@@ -240,12 +245,17 @@ class _InstallationScreenState extends State<InstallationScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Text(
-                            'البيانات',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 21),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                'البيانات',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 21),
+                              ),
+                            ),
                           ),
                           IconButton(
                               onPressed: () {
@@ -411,6 +421,7 @@ class AlertDialogPage extends StatefulWidget {
   @override
   AlertDialogPageState createState() => AlertDialogPageState();
 }
+
 class AlertDialogPageState extends State<AlertDialogPage> {
   TextEditingController indoorController = TextEditingController();
   TextEditingController outdoorController = TextEditingController();
@@ -476,7 +487,12 @@ class AlertDialogPageState extends State<AlertDialogPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                showDialog(
+                  builder: (context) {
+                    return const OTPAlertDialog();
+                  },
+                  context: context,
+                );
               },
               child: const Text('ارسال الطلب'),
             ),
@@ -495,6 +511,7 @@ class UploadImageButton extends StatefulWidget {
   @override
   UploadImageButtonState createState() => UploadImageButtonState();
 }
+
 class UploadImageButtonState extends State<UploadImageButton> {
   final picker = ImagePicker();
   final List<File> _pickedFiles = [];
@@ -621,5 +638,59 @@ class UploadImageButtonState extends State<UploadImageButton> {
         ),
       ),
     );
+  }
+}
+
+class OTPAlertDialog extends StatefulWidget {
+  const OTPAlertDialog({Key? key}) : super(key: key);
+
+  @override
+  State<OTPAlertDialog> createState() => OTPAlertDialogState();
+}
+
+class OTPAlertDialogState extends State<OTPAlertDialog> {
+  final oTP = TextEditingController();
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: const Text("برجاء ادخال رمز التحقق المرسل الي العميل"),
+        content: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('رقم العميل :'),
+              const Text("0112398274"),
+              TextFormField(
+                controller: oTP,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    hintText: "OTP",
+                    prefixIcon: const Icon(Icons.format_list_numbered),
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    )),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                },
+                child: const Text("ارسال"),
+              )
+            ],
+          ),
+        ));
   }
 }

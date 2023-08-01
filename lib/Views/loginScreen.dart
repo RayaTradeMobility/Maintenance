@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Services/checkNetwork.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -18,13 +19,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity();
-
 
   LoginModel? loginModel;
   String error = "";
@@ -40,7 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("No Internet Connection"),
-            content: const Text("Please check your internet connection and try again."),
+            content: const Text(
+                "Please check your internet connection and try again."),
             actions: [
               TextButton(
                 child: const Text("OK"),
@@ -78,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _loadCredentials();
-
   }
 
   // bool isEmailValid(String email) {
@@ -99,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
-
       body: Stack(
         children: [
           Positioned(
@@ -107,19 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
             top: 0,
             bottom: 0,
             child: Container(
-
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height,
-              decoration: const BoxDecoration(
-
-
-              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: SingleChildScrollView(
@@ -131,11 +118,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Image.asset('assets/raya.png', width: 350.0,
-                            height: 180.0,),
+                          Image.asset(
+                            'assets/raya.png',
+                            width: 350.0,
+                            height: 180.0,
+                          ),
                           loginCard(context),
-
-                          const SizedBox(height: 50.0,),
+                          const SizedBox(
+                            height: 50.0,
+                          ),
                         ],
                       ),
                     ),
@@ -153,8 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white.withOpacity(.2),
-          borderRadius: BorderRadius.circular(20.0)
-      ),
+          borderRadius: BorderRadius.circular(20.0)),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -166,14 +156,18 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(Icons.person_rounded),
-                Text("تسجيل الدخول", style: TextStyle(color: Colors.blueGrey,
-                    fontSize: 21.0,
-                    fontWeight: FontWeight.bold),),
-
-
+                Text(
+                  "تسجيل الدخول",
+                  style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 21.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
-            const SizedBox(height: 10.0,),
+            const SizedBox(
+              height: 10.0,
+            ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
@@ -193,13 +187,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                    )
-                ),
-
-
+                    )),
               ),
             ),
-            const SizedBox(height: 5.0,),
+            const SizedBox(
+              height: 5.0,
+            ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
@@ -214,16 +207,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       _passwordVisibility
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Theme
-                          .of(context)
-                          .primaryColorDark,
+                      color: Theme.of(context).primaryColorDark,
                     ),
                     onPressed: () {
                       setState(() {
                         _passwordVisibility = !_passwordVisibility;
                       });
                     },
-
                   ),
                   hintText: "كلمة السر",
                   prefixIcon: const Icon(Icons.password),
@@ -266,7 +256,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>  HomePage(siteRequestId: user.siteRequestId),
+                            builder: (context) =>
+                                HomePage(siteRequestId: user.siteRequestId),
                           ),
                         );
                       } catch (e) {
@@ -282,32 +273,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     }
                   },
-
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
                     fixedSize: const Size.fromWidth(500),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0),
-                    ),),
+                    ),
+                  ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
                       Text("تسجيل الدخول"),
                     ],
                   ),
                 ),
               ),
-
             ),
-
             Center(
-                child: Text(error, style: const TextStyle(color: Colors.red),)),
+                child: Text(
+              error,
+              style: const TextStyle(color: Colors.red),
+            )),
           ],
         ),
       ),
-
     );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
@@ -13,9 +15,11 @@ class NetworkConnectivity {
   }
 
   final Connectivity _connectivity = Connectivity();
-  final StreamController<ConnectivityResult> _connectivityStreamController = StreamController<ConnectivityResult>.broadcast();
+  final StreamController<ConnectivityResult> _connectivityStreamController =
+      StreamController<ConnectivityResult>.broadcast();
 
-  Stream<ConnectivityResult> get myStream => _connectivityStreamController.stream;
+  Stream<ConnectivityResult> get myStream =>
+      _connectivityStreamController.stream;
 
   Future<bool> checkConnectivity() async {
     final ConnectivityResult result = await _connectivity.checkConnectivity();

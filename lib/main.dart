@@ -4,7 +4,8 @@ import 'package:maintenance/Views/splashScreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
@@ -13,11 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen()
-    );
-
+        debugShowCheckedModeBanner: false, home: SplashScreen());
   }
 }
