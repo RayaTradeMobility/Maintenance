@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:maintenance/Views/installationScreen.dart';
+import 'package:maintenance/Views/repairScreen.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -164,13 +165,25 @@ class _OrderScreenState extends State<OrderScreen>
                         _refreshIndicatorKey2.currentState?.show();
                         setState(() {});
                       },
-                      child: const SingleChildScrollView(
-                          child: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Column(
-                          children: [Text("Data")],
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Column(
+                            children: [
+                              GridView.count(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                mainAxisSpacing: 10.0,
+                                crossAxisSpacing: 10.0,
+                                childAspectRatio: 1 / 0.5,
+                                crossAxisCount: 1,
+                                children: List.generate(
+                                    8, (index) => const CustomCard2()),
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                     ),
                     // second tab bar view widget
                   ],
@@ -212,7 +225,7 @@ class CustomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':الاسم الاول',
+                      ':الاسم ',
                       style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
@@ -223,22 +236,22 @@ class CustomCard extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      ':الاسم الاخير',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      Icons.account_box_rounded,
-                      color: Colors.grey,
-                    ),
-                  ]),
+              // Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       Text(
+              //         ':الاسم الاخير',
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //       SizedBox(
+              //         width: 5.0,
+              //       ),
+              //       Icon(
+              //         Icons.account_box_rounded,
+              //         color: Colors.grey,
+              //       ),
+              //     ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -271,22 +284,22 @@ class CustomCard extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      ':المنطقه',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      Icons.zoom_out,
-                      color: Colors.grey,
-                    ),
-                  ]),
+              // Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       Text(
+              //         ':المنطقه',
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //       SizedBox(
+              //         width: 5.0,
+              //       ),
+              //       Icon(
+              //         Icons.zoom_out,
+              //         color: Colors.grey,
+              //       ),
+              //     ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -308,6 +321,23 @@ class CustomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
+                      ':المنتج',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.branding_watermark_outlined,
+                      color: Colors.grey,
+                    ),
+                  ]),
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
                       ': العطل',
                       style: TextStyle(color: Colors.black),
                     ),
@@ -324,3 +354,162 @@ class CustomCard extends StatelessWidget {
     );
   }
 }
+
+class CustomCard2 extends StatelessWidget {
+  const CustomCard2({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RepairScreen()),
+        );
+      },
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':الاسم ',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.account_circle,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              // Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       Text(
+              //         ':الاسم الاخير',
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //       SizedBox(
+              //         width: 5.0,
+              //       ),
+              //       Icon(
+              //         Icons.account_box_rounded,
+              //         color: Colors.grey,
+              //       ),
+              //     ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':رقم الموبايل',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.mobile_friendly,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':المدينه',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.location_city,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              // Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       Text(
+              //         ':المنطقه',
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //       SizedBox(
+              //         width: 5.0,
+              //       ),
+              //       Icon(
+              //         Icons.zoom_out,
+              //         color: Colors.grey,
+              //       ),
+              //     ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':العنوان',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.grey,
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':المنتج',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.branding_watermark_outlined,
+                      color: Colors.grey,
+                    ),
+                  ]),
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ': العطل',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Icon(
+                      Icons.tire_repair,
+                      color: Colors.grey,
+                    ),
+                  ]),
+            ],
+          )),
+    );
+  }
+}
+
