@@ -257,12 +257,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                HomePage(siteRequestId: user.siteRequestId),
+                                HomePage(mobileUsername: user.mobileUsername!),
                           ),
                         );
                       } catch (e) {
                         Fluttertoast.showToast(
-                          msg: "Invalid Username Or Password",
+                          msg: "الايميل او الباسورد خطأ",
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 1,

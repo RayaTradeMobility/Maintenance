@@ -1,33 +1,18 @@
-// ignore_for_file: file_names
-
 class LoginModel {
-  final String username;
-  final String password;
-  final String status;
-  final String siteRequestId;
+  String? mobileUsername;
+  String? maintenanceRepName;
 
-  LoginModel({
-    required this.username,
-    required this.password,
-    required this.status,
-    required this.siteRequestId,
-  });
+  LoginModel({this.mobileUsername, this.maintenanceRepName});
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) {
-    return LoginModel(
-      username: json['username'],
-      password: json['password'],
-      status: json['status'],
-      siteRequestId: json['siteRequestId'],
-    );
+  LoginModel.fromJson(Map<String, dynamic> json) {
+    mobileUsername = json['mobile_Username'];
+    maintenanceRepName = json['maintenance_RepName'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'password': password,
-      'status': status,
-      'siteRequestId': siteRequestId,
-    };
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['mobile_Username'] = mobileUsername;
+    data['maintenance_RepName'] = maintenanceRepName;
+    return data;
   }
 }

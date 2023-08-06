@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
 import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
@@ -54,6 +55,20 @@ class API{
       throw Exception('Failed to load Stock order data');
     }
   }
+
+  Future<InstallationModel> fetchInstallation(String mobileUsername) async {
+    final response = await http.get(Uri.parse('http://www.rayatrade.com/TechnicionMobileApi/api/User/GetInstallationCases?MobileUsername=$mobileUsername'));
+
+    if (response.statusCode == 200) {
+
+      final Map<String , dynamic> jsonMap = json.decode(response.body);
+      return InstallationModel.fromJson(jsonMap);
+    } else {
+      throw Exception('Failed to load Installation Case data');
+    }
+  }
+
+
 
 
 }

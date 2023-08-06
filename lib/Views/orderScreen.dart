@@ -1,11 +1,14 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:maintenance/API/API.dart';
+import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Views/installationScreen.dart';
 import 'package:maintenance/Views/repairScreen.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({Key? key}) : super(key: key);
+  final String mobileUsername;
+  const OrderScreen({Key? key, required this.mobileUsername}) : super(key: key);
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -21,11 +24,22 @@ class _OrderScreenState extends State<OrderScreen>
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey2 =
       GlobalKey<RefreshIndicatorState>();
+  List<InstallationCases> installationList = [];
+  ScrollController controller = ScrollController();
+  API api = API();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    // ignore: avoid_types_as_parameter_names
+    api.fetchInstallation(widget.mobileUsername).then((InstallationModel) {
+      setState(() {
+        installationList = InstallationModel.installationCases!;
+        searchController = TextEditingController();
+      });
+    });
+
   }
 
   @override
@@ -59,6 +73,7 @@ class _OrderScreenState extends State<OrderScreen>
                           }),
                         );
                       },
+
                       icon: const Icon(
                         Icons.search,
                         color: Colors.white,
@@ -138,24 +153,19 @@ class _OrderScreenState extends State<OrderScreen>
                         _refreshIndicatorKey.currentState?.show();
                         setState(() {});
                       },
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Column(
-                            children: [
-                              GridView.count(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                mainAxisSpacing: 10.0,
-                                crossAxisSpacing: 10.0,
-                                childAspectRatio: 1 / 0.5,
-                                crossAxisCount: 1,
-                                children: List.generate(
-                                    8, (index) => const CustomCard()),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child: ListView.builder(
+                        controller: controller,
+                        itemCount: installationList.length+1,
+                        itemBuilder: (BuildContext context, int index) {
+                          if(index<installationList.length) {
+                            return   CustomCardInstallation(customerName: installationList[index].customerFullName!,
+                            mobileNumber: installationList[index].mobileNumber!, city: installationList[index].city!,
+                            address: installationList[index].address!,symptom: installationList[index].symptom!,
+                            model: installationList[index].model!,);
+                          }
+                          return null;
+
+                        },
                       ),
                     ),
 
@@ -178,7 +188,7 @@ class _OrderScreenState extends State<OrderScreen>
                                 childAspectRatio: 1 / 0.5,
                                 crossAxisCount: 1,
                                 children: List.generate(
-                                    8, (index) => const CustomCard2()),
+                                    8, (index) => const CustomCardRepair()),
                               ),
                             ],
                           ),
@@ -197,9 +207,10 @@ class _OrderScreenState extends State<OrderScreen>
   }
 }
 
-class CustomCard extends StatelessWidget {
-  const CustomCard({
-    Key? key,
+class CustomCardInstallation extends StatelessWidget {
+  final String customerName , mobileNumber, city , address, symptom , model;
+  const CustomCardInstallation({
+    Key? key, required this.customerName, required this.mobileNumber, required this.city, required this.address, required this.symptom, required this.model,
   }) : super(key: key);
 
   @override
@@ -216,7 +227,7 @@ class CustomCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: const Column(
+          child:  Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -225,45 +236,29 @@ class CustomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':الاسم ',
-                      style: TextStyle(color: Colors.black),
+                      '$customerName :الاسم ',
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.account_circle,
                       color: Colors.grey,
                     ),
                   ]),
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       Text(
-              //         ':الاسم الاخير',
-              //         style: TextStyle(color: Colors.black),
-              //       ),
-              //       SizedBox(
-              //         width: 5.0,
-              //       ),
-              //       Icon(
-              //         Icons.account_box_rounded,
-              //         color: Colors.grey,
-              //       ),
-              //     ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':رقم الموبايل',
-                      style: TextStyle(color: Colors.black),
+                      '$mobileNumber :رقم الموبايل',
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.mobile_friendly,
                       color: Colors.grey,
                     ),
@@ -273,45 +268,34 @@ class CustomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':المدينه',
-                      style: TextStyle(color: Colors.black),
+                      '$city :المدينه',
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.location_city,
                       color: Colors.grey,
                     ),
                   ]),
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       Text(
-              //         ':المنطقه',
-              //         style: TextStyle(color: Colors.black),
-              //       ),
-              //       SizedBox(
-              //         width: 5.0,
-              //       ),
-              //       Icon(
-              //         Icons.zoom_out,
-              //         color: Colors.grey,
-              //       ),
-              //     ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':العنوان',
+                      address,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const Text(
+                      ' :العنوان',
                       style: TextStyle(color: Colors.black),
                     ),
-                    SizedBox(
+
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.location_on,
                       color: Colors.grey,
                     ),
@@ -321,33 +305,40 @@ class CustomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      ':المنتج',
-                      style: TextStyle(color: Colors.black),
+                      '$model :المنتج',
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.branding_watermark_outlined,
                       color: Colors.grey,
                     ),
                   ]),
-
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Text(
-                      ': العطل',
-                      style: TextStyle(color: Colors.black),
+                      symptom,
+                      maxLines: 12,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: const TextStyle(fontSize: 12),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5.0,
                     ),
-                    Icon(
+                    const Text(" :العطل"),
+
+                    const Icon(
                       Icons.tire_repair,
                       color: Colors.grey,
                     ),
+
+
                   ]),
             ],
           )),
@@ -355,8 +346,8 @@ class CustomCard extends StatelessWidget {
   }
 }
 
-class CustomCard2 extends StatelessWidget {
-  const CustomCard2({
+class CustomCardRepair extends StatelessWidget {
+  const CustomCardRepair({
     Key? key,
   }) : super(key: key);
 
@@ -512,4 +503,3 @@ class CustomCard2 extends StatelessWidget {
     );
   }
 }
-
