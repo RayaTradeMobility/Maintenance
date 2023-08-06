@@ -231,6 +231,9 @@ class CustomCardInstallation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              const SizedBox(
+                height: 5.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -247,6 +250,9 @@ class CustomCardInstallation extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 9.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -263,6 +269,9 @@ class CustomCardInstallation extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 9.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -279,6 +288,9 @@ class CustomCardInstallation extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 9.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -300,6 +312,9 @@ class CustomCardInstallation extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 9.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -316,6 +331,9 @@ class CustomCardInstallation extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 9.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,7 +344,8 @@ class CustomCardInstallation extends StatelessWidget {
                       maxLines: 12,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
-                      style: const TextStyle(fontSize: 12),
+                      textAlign: TextAlign.end,
+                      style: const TextStyle(fontSize: 13),
                     ),
                     const SizedBox(
                       width: 5.0,
