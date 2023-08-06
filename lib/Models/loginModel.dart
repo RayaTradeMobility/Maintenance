@@ -4,7 +4,7 @@ class LoginModel {
   String? mobileUsername;
   String? maintenanceRepName;
 
-  LoginModel({ this.mobileUsername, this.maintenanceRepName});
+  LoginModel({this.mobileUsername, this.maintenanceRepName});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     mobileUsername = json['mobile_Username'];

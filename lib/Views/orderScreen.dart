@@ -39,7 +39,6 @@ class _OrderScreenState extends State<OrderScreen>
         searchController = TextEditingController();
       });
     });
-
   }
 
   @override
@@ -73,7 +72,6 @@ class _OrderScreenState extends State<OrderScreen>
                           }),
                         );
                       },
-
                       icon: const Icon(
                         Icons.search,
                         color: Colors.white,
@@ -155,19 +153,25 @@ class _OrderScreenState extends State<OrderScreen>
                       },
                       child: ListView.builder(
                         controller: controller,
-                        itemCount: installationList.length+1,
+                        itemCount: installationList.length + 1,
                         itemBuilder: (BuildContext context, int index) {
-                          if(index<installationList.length) {
-                            return   CustomCardInstallation(customerName: installationList[index].customerFullName!,
-                            mobileNumber: installationList[index].mobileNumber!, city: installationList[index].city!,
-                            address: installationList[index].address!,symptom: installationList[index].symptom!,
-                            model: installationList[index].model!, serial:installationList[index].serial! ,
-                            category: installationList[index].category!,
-                            brand: installationList[index].brand!,
-                              symptomCategory: installationList[index].symptomCategory!);
+                          if (index < installationList.length) {
+                            return CustomCardInstallation(
+                                customerName:
+                                    installationList[index].customerFullName!,
+                                mobileNumber:
+                                    installationList[index].mobileNumber!,
+                                city: installationList[index].city!,
+                                address: installationList[index].address!,
+                                symptom: installationList[index].symptom!,
+                                model: installationList[index].model!,
+                                serial: installationList[index].serial!,
+                                category: installationList[index].category!,
+                                brand: installationList[index].brand!,
+                                symptomCategory:
+                                    installationList[index].symptomCategory!);
                           }
                           return null;
-
                         },
                       ),
                     ),
@@ -211,11 +215,28 @@ class _OrderScreenState extends State<OrderScreen>
 }
 
 class CustomCardInstallation extends StatelessWidget {
-  final String customerName , mobileNumber, city , address, symptom , model , serial ,category, brand , symptomCategory;
+  final String customerName,
+      mobileNumber,
+      city,
+      address,
+      symptom,
+      model,
+      serial,
+      category,
+      brand,
+      symptomCategory;
   const CustomCardInstallation({
-    Key? key, required this.customerName, required this.mobileNumber,
-    required this.city, required this.address, required this.symptom,
-    required this.model, required this.serial,required this.category , required this.brand, required this.symptomCategory,
+    Key? key,
+    required this.customerName,
+    required this.mobileNumber,
+    required this.city,
+    required this.address,
+    required this.symptom,
+    required this.model,
+    required this.serial,
+    required this.category,
+    required this.brand,
+    required this.symptomCategory,
   }) : super(key: key);
 
   @override
@@ -224,9 +245,19 @@ class CustomCardInstallation extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  InstallationScreen(customerName: customerName,
-          mobileNumber: mobileNumber, city: city, address: address,symptom: symptom, model: model,
-          serial: serial ,category :category ,   brand: brand, symptomCategory: symptomCategory,)),
+          MaterialPageRoute(
+              builder: (context) => InstallationScreen(
+                    customerName: customerName,
+                    mobileNumber: mobileNumber,
+                    city: city,
+                    address: address,
+                    symptom: symptom,
+                    model: model,
+                    serial: serial,
+                    category: category,
+                    brand: brand,
+                    symptomCategory: symptomCategory,
+                  )),
         );
       },
       child: Card(
@@ -234,7 +265,7 @@ class CustomCardInstallation extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child:  Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -310,7 +341,6 @@ class CustomCardInstallation extends StatelessWidget {
                       ' :العنوان',
                       style: TextStyle(color: Colors.black),
                     ),
-
                     const SizedBox(
                       width: 5.0,
                     ),
@@ -345,7 +375,6 @@ class CustomCardInstallation extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
                       symptom,
                       maxLines: 12,
@@ -358,13 +387,10 @@ class CustomCardInstallation extends StatelessWidget {
                       width: 5.0,
                     ),
                     const Text(" :العطل"),
-
                     const Icon(
                       Icons.tire_repair,
                       color: Colors.grey,
                     ),
-
-
                   ]),
             ],
           )),

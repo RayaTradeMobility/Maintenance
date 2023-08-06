@@ -7,9 +7,30 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class InstallationScreen extends StatefulWidget {
-  final String customerName , mobileNumber, city , address, symptom , model , serial ,category, brand , symptomCategory;
+  final String customerName,
+      mobileNumber,
+      city,
+      address,
+      symptom,
+      model,
+      serial,
+      category,
+      brand,
+      symptomCategory;
 
-  const InstallationScreen({Key? key, required this.customerName, required this.mobileNumber, required this.city, required this.address, required this.symptom, required this.model, required this.serial, required this.category, required this.brand, required this.symptomCategory, }) : super(key: key);
+  const InstallationScreen({
+    Key? key,
+    required this.customerName,
+    required this.mobileNumber,
+    required this.city,
+    required this.address,
+    required this.symptom,
+    required this.model,
+    required this.serial,
+    required this.category,
+    required this.brand,
+    required this.symptomCategory,
+  }) : super(key: key);
 
   @override
   State<InstallationScreen> createState() => _InstallationScreenState();
@@ -28,10 +49,8 @@ class _InstallationScreenState extends State<InstallationScreen>
   }
 
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: Row(
@@ -113,14 +132,13 @@ class _InstallationScreenState extends State<InstallationScreen>
                         axis: CollapsibleAxis.vertical,
                         minOpacity: 0.2,
                         alignment: Alignment.bottomLeft,
-                        child:  Column(
+                        child: Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-
-                          Text(
+                                Text(
                                   "${widget.customerName.split(' ').first} :الاسم الاول ",
                                   style: const TextStyle(
                                       color: Colors.black,
@@ -135,7 +153,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                             const SizedBox(
                               height: 5.0,
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -154,7 +172,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                             const SizedBox(
                               height: 5.0,
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -173,7 +191,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                             const SizedBox(
                               height: 5.0,
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -227,7 +245,6 @@ class _InstallationScreenState extends State<InstallationScreen>
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
-
                                   const SizedBox(
                                     width: 5.0,
                                   ),
@@ -292,9 +309,9 @@ class _InstallationScreenState extends State<InstallationScreen>
                         collapsed: collapse,
                         axis: CollapsibleAxis.vertical,
                         alignment: Alignment.bottomLeft,
-                        child:  Column(
+                        child: Column(
                           children: [
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -324,7 +341,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                               ],
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -339,7 +356,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                               ],
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -388,7 +405,6 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
                                   Text(
                                     widget.symptom,
                                     maxLines: 12,
@@ -406,11 +422,8 @@ class _InstallationScreenState extends State<InstallationScreen>
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
-
-
-
                                 ]),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [

@@ -7,8 +7,8 @@ import 'package:maintenance/Models/stockModel.dart';
 import '../Constants/Constants.dart';
 
 class StockScreen extends StatefulWidget {
-  final String siteRequestId;
-  const StockScreen({Key? key, required this.siteRequestId}) : super(key: key);
+  final String mobileUsername;
+  const StockScreen({Key? key, required this.mobileUsername}) : super(key: key);
 
   @override
   StockScreenState createState() => StockScreenState();
@@ -20,21 +20,20 @@ class StockScreenState extends State<StockScreen> {
 
   TextEditingController searchController = TextEditingController();
 
-
   @override
   void initState() {
-    _futureData = api.fetchStock(widget.siteRequestId);
+    _futureData = api.fetchStock(widget.mobileUsername);
     super.initState();
   }
 
-  List <Stock> filteredItemList = [];
+  List<Stock> filteredItemList = [];
   List<Stock> itemsList = [];
 
   void filterCrop(value) {
     setState(() {
       filteredItemList = itemsList
-          .where((e) =>
-          e.partNumber!.toLowerCase().contains(value.toLowerCase()))
+          .where(
+              (e) => e.partNumber!.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -42,7 +41,6 @@ class StockScreenState extends State<StockScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       appBar: AppBar(
         backgroundColor: MyColorsSample.primary.withOpacity(0.8),
@@ -53,11 +51,9 @@ class StockScreenState extends State<StockScreen> {
         title: const Text("المخزن"),
         centerTitle: true,
       ),
-
       body: FutureBuilder<StockModel>(
         future: _futureData,
         builder: (context, snapshot) {
-
           if (snapshot.hasData) {
             final stockModel = snapshot.data;
             return ListView.builder(
@@ -66,7 +62,6 @@ class StockScreenState extends State<StockScreen> {
                 final stocking = stockModel.stock![index];
 
                 return Card(
-
                   child: CustomerCard(
                     stocking.partNumber!,
                     stocking.spareDescription!,

@@ -45,16 +45,16 @@ class InstallationCases {
 
   InstallationCases(
       {this.customerFullName,
-        this.mobileNumber,
-        this.phoneNumber,
-        this.city,
-        this.address,
-        this.symptom,
-        this.model,
-        this.serial,
-        this.category,
-        this.brand,
-        this.symptomCategory});
+      this.mobileNumber,
+      this.phoneNumber,
+      this.city,
+      this.address,
+      this.symptom,
+      this.model,
+      this.serial,
+      this.category,
+      this.brand,
+      this.symptomCategory});
 
   InstallationCases.fromJson(Map<String, dynamic> json) {
     customerFullName = json['customerFullName'];

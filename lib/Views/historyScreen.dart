@@ -7,9 +7,9 @@ import 'package:maintenance/Models/historyModel.dart';
 import '../Constants/Constants.dart';
 
 class HistoryScreen extends StatefulWidget {
-  final String siteRequestId;
+  final String mobileUsername;
 
-  const HistoryScreen({Key? key, required this.siteRequestId})
+  const HistoryScreen({Key? key, required this.mobileUsername})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _futureData = api.fetchHistory(widget.siteRequestId);
+    _futureData = api.fetchHistory(widget.mobileUsername);
   }
 
   @override

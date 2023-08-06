@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                             builder: (context) => HistoryScreen(
-                              siteRequestId: widget.mobileUsername,
+                              mobileUsername: widget.mobileUsername,
                             ),
                           ),
                         );
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                               builder: (context) => StockScreen(
-                                    siteRequestId: widget.mobileUsername,
+                                    mobileUsername: widget.mobileUsername,
                                   )),
                         );
                       },

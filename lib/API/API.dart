@@ -7,68 +7,60 @@ import 'package:maintenance/Models/stockModel.dart';
 import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
 
-class API{
-
-  login( String username, String password) async {
-    var headers = {
-      'Content-Type': 'application/json'
-    };
-    var request = http.Request('POST',
-        Uri.parse('http://www.rayatrade.com/TechnicionMobileApi/api/User/Login'));
-    request.body = json.encode({
-      "username": username,
-      "password": password
-    });
+class API {
+  login(String username, String password) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/Login'));
+    request.body = json.encode({"username": username, "password": password});
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode == 200) {
-
       return LoginModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to login');
     }
   }
 
-
-  Future<StockModel> fetchStock(String siteRequestId) async {
-    final response = await http.get(Uri.parse('http://www.rayatrade.com/TechnicionMobileApi/api/User/GetStock?SiteRequestId=$siteRequestId'));
+  Future<StockModel> fetchStock(String mobileUsername) async {
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetStock?SiteRequestId=$mobileUsername'));
 
     if (response.statusCode == 200) {
-      final Map<String , dynamic> jsonMap = json.decode(response.body);
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
 
-     return StockModel.fromJson(jsonMap);
+      return StockModel.fromJson(jsonMap);
     } else {
       throw Exception('Failed to load Stock order data');
     }
   }
 
-  Future<HistoryModel> fetchHistory(String siteRequestId) async {
-    final response = await http.get(Uri.parse('http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$siteRequestId'));
+  Future<HistoryModel> fetchHistory(String mobileUsername) async {
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$mobileUsername'));
 
     if (response.statusCode == 200) {
-      final Map<String , dynamic> jsonMap = json.decode(response.body);
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
 
       return HistoryModel.fromJson(jsonMap);
     } else {
-      throw Exception('Failed to load Stock order data');
+      throw Exception('Failed to load History order data');
     }
   }
 
   Future<InstallationModel> fetchInstallation(String mobileUsername) async {
-    final response = await http.get(Uri.parse('http://www.rayatrade.com/TechnicionMobileApi/api/User/GetInstallationCases?MobileUsername=$mobileUsername'));
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetInstallationCases?MobileUsername=$mobileUsername'));
 
     if (response.statusCode == 200) {
-
-      final Map<String , dynamic> jsonMap = json.decode(response.body);
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
       return InstallationModel.fromJson(jsonMap);
     } else {
       throw Exception('Failed to load Installation Case data');
     }
   }
-
-
-
-
 }
