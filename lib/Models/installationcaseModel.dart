@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class InstallationModel {
   String? code;
   String? message;
@@ -36,6 +38,10 @@ class InstallationCases {
   String? address;
   String? symptom;
   String? model;
+  String? serial;
+  String? category;
+  String? brand;
+  String? symptomCategory;
 
   InstallationCases(
       {this.customerFullName,
@@ -44,7 +50,11 @@ class InstallationCases {
         this.city,
         this.address,
         this.symptom,
-        this.model});
+        this.model,
+        this.serial,
+        this.category,
+        this.brand,
+        this.symptomCategory});
 
   InstallationCases.fromJson(Map<String, dynamic> json) {
     customerFullName = json['customerFullName'];
@@ -54,6 +64,10 @@ class InstallationCases {
     address = json['address'];
     symptom = json['symptom'];
     model = json['model'];
+    serial = json['serial'];
+    category = json['category'];
+    brand = json['brand'];
+    symptomCategory = json['symptomCategory'];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +79,10 @@ class InstallationCases {
     data['address'] = address;
     data['symptom'] = symptom;
     data['model'] = model;
+    data['serial'] = serial;
+    data['category'] = category;
+    data['brand'] = brand;
+    data['symptomCategory'] = symptomCategory;
     return data;
   }
 }

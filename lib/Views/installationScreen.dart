@@ -7,7 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class InstallationScreen extends StatefulWidget {
-  const InstallationScreen({Key? key}) : super(key: key);
+  final String customerName , mobileNumber, city , address, symptom , model , serial ,category, brand , symptomCategory;
+
+  const InstallationScreen({Key? key, required this.customerName, required this.mobileNumber, required this.city, required this.address, required this.symptom, required this.model, required this.serial, required this.category, required this.brand, required this.symptomCategory, }) : super(key: key);
 
   @override
   State<InstallationScreen> createState() => _InstallationScreenState();
@@ -26,8 +28,10 @@ class _InstallationScreenState extends State<InstallationScreen>
   }
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: Row(
@@ -109,85 +113,86 @@ class _InstallationScreenState extends State<InstallationScreen>
                         axis: CollapsibleAxis.vertical,
                         minOpacity: 0.2,
                         alignment: Alignment.bottomLeft,
-                        child: const Column(
+                        child:  Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(
-                                  ":الاسم الاول ",
-                                  style: TextStyle(
+
+                          Text(
+                                  "${widget.customerName.split(' ').first} :الاسم الاول ",
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.account_circle,
                                   color: Colors.grey,
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5.0,
                             ),
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  ':الاسم الاخير ',
-                                  style: TextStyle(
+                                  '${widget.customerName.split(' ').last}:الاسم الاخير ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.account_box_rounded,
                                   color: Colors.grey,
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5.0,
                             ),
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  ':رقم الموبايل ',
-                                  style: TextStyle(
+                                  '${widget.mobileNumber} :رقم الموبايل ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.phone_android,
                                   color: Colors.grey,
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5.0,
                             ),
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  ':المدينه ',
-                                  style: TextStyle(
+                                  '${widget.city} :المدينه ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.mobile_friendly,
                                   color: Colors.grey,
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5.0,
                             ),
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -203,26 +208,35 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5.0,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  ':العنوان',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    widget.address,
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text(
+                                    ': العنوان',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: Colors.grey,
+                                  ),
+                                ]),
+                            const SizedBox(
                               height: 5.0,
                             ),
                           ],
@@ -278,24 +292,24 @@ class _InstallationScreenState extends State<InstallationScreen>
                         collapsed: collapse,
                         axis: CollapsibleAxis.vertical,
                         alignment: Alignment.bottomLeft,
-                        child: const Column(
+                        child:  Column(
                           children: [
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 5.0,
                                 ),
                                 Text(
-                                  ':السريال ',
-                                  style: TextStyle(
+                                  '${widget.serial}:السريال ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -310,91 +324,102 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                               ],
                             ),
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 5.0,
                                 ),
                                 Text(
-                                  ':المركه ',
-                                  style: TextStyle(
+                                  '${widget.category}:المركه ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                            Row(
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 5.0,
                                 ),
                                 Text(
-                                  ':المنتج ',
-                                  style: TextStyle(
+                                  '${widget.brand}:المنتج ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
+                            // const Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   crossAxisAlignment: CrossAxisAlignment.end,
+                            //   children: [
+                            //     SizedBox(
+                            //       width: 5.0,
+                            //     ),
+                            //     Text(
+                            //       ':السريال الداخلي ',
+                            //       style: TextStyle(
+                            //           color: Colors.black,
+                            //           fontWeight: FontWeight.bold),
+                            //     ),
+                            //   ],
+                            // ),
+                            // const Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   crossAxisAlignment: CrossAxisAlignment.end,
+                            //   children: [
+                            //     SizedBox(
+                            //       width: 5.0,
+                            //     ),
+                            //     Text(
+                            //       ':السريال الخارجي ',
+                            //       style: TextStyle(
+                            //           color: Colors.black,
+                            //           fontWeight: FontWeight.bold),
+                            //     ),
+                            //   ],
+                            // ),
                             Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  Text(
+                                    widget.symptom,
+                                    maxLines: 12,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    textAlign: TextAlign.end,
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  const Text(
+                                    ': المشكله ',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+
+
+
+                                ]),
+                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 5.0,
                                 ),
                                 Text(
-                                  ':السريال الداخلي ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  ':السريال الخارجي ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  ':المشكله ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  ':نوع المشكله ',
-                                  style: TextStyle(
+                                  '${widget.symptomCategory}:نوع المشكله ',
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),

@@ -161,7 +161,10 @@ class _OrderScreenState extends State<OrderScreen>
                             return   CustomCardInstallation(customerName: installationList[index].customerFullName!,
                             mobileNumber: installationList[index].mobileNumber!, city: installationList[index].city!,
                             address: installationList[index].address!,symptom: installationList[index].symptom!,
-                            model: installationList[index].model!,);
+                            model: installationList[index].model!, serial:installationList[index].serial! ,
+                            category: installationList[index].category!,
+                            brand: installationList[index].brand!,
+                              symptomCategory: installationList[index].symptomCategory!);
                           }
                           return null;
 
@@ -208,9 +211,11 @@ class _OrderScreenState extends State<OrderScreen>
 }
 
 class CustomCardInstallation extends StatelessWidget {
-  final String customerName , mobileNumber, city , address, symptom , model;
+  final String customerName , mobileNumber, city , address, symptom , model , serial ,category, brand , symptomCategory;
   const CustomCardInstallation({
-    Key? key, required this.customerName, required this.mobileNumber, required this.city, required this.address, required this.symptom, required this.model,
+    Key? key, required this.customerName, required this.mobileNumber,
+    required this.city, required this.address, required this.symptom,
+    required this.model, required this.serial,required this.category , required this.brand, required this.symptomCategory,
   }) : super(key: key);
 
   @override
@@ -219,7 +224,9 @@ class CustomCardInstallation extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const InstallationScreen()),
+          MaterialPageRoute(builder: (context) =>  InstallationScreen(customerName: customerName,
+          mobileNumber: mobileNumber, city: city, address: address,symptom: symptom, model: model,
+          serial: serial ,category :category ,   brand: brand, symptomCategory: symptomCategory,)),
         );
       },
       child: Card(
