@@ -158,7 +158,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  '${widget.customerName.split(' ').last}:الاسم الاخير ',
+                                  '${widget.customerName.split(' ').last} :الاسم الاخير ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
@@ -210,22 +210,22 @@ class _InstallationScreenState extends State<InstallationScreen>
                             const SizedBox(
                               height: 5.0,
                             ),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  ':المنطقه ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Icon(
-                                  Icons.location_city,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
+                            // const Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   crossAxisAlignment: CrossAxisAlignment.end,
+                            //   children: [
+                            //     Text(
+                            //       ':المنطقه ',
+                            //       style: TextStyle(
+                            //           color: Colors.black,
+                            //           fontWeight: FontWeight.bold),
+                            //     ),
+                            //     Icon(
+                            //       Icons.location_city,
+                            //       color: Colors.grey,
+                            //     ),
+                            //   ],
+                            // ),
                             const SizedBox(
                               height: 5.0,
                             ),
@@ -364,7 +364,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${widget.brand}:المنتج ',
+                                  '${widget.brand} :المنتج ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
@@ -405,14 +405,15 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    widget.symptom,
-                                    maxLines: 12,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                    textAlign: TextAlign.end,
-                                    style: const TextStyle(fontSize: 13),
-                                  ),
+                                  Text(widget.symptom,
+                                      maxLines: 12,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
+                                      textAlign: TextAlign.end,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13)),
                                   const SizedBox(
                                     width: 5.0,
                                   ),
@@ -431,7 +432,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${widget.symptomCategory}:نوع المشكله ',
+                                  '${widget.symptomCategory} :نوع المشكله ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
