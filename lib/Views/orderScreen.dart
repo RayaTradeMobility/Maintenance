@@ -6,8 +6,11 @@ import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Views/installationScreen.dart';
 import 'package:maintenance/Views/repairScreen.dart';
 
+import '../Constants/Constants.dart';
+
 class OrderScreen extends StatefulWidget {
   final String mobileUsername;
+
   const OrderScreen({Key? key, required this.mobileUsername}) : super(key: key);
 
   @override
@@ -52,7 +55,10 @@ class _OrderScreenState extends State<OrderScreen>
     return Scaffold(
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(59, 60, 54, 20),
+        backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+        ),
         title: customSearchBar,
         centerTitle: true,
         automaticallyImplyLeading: true,
@@ -157,19 +163,22 @@ class _OrderScreenState extends State<OrderScreen>
                         itemBuilder: (BuildContext context, int index) {
                           if (index < installationList.length) {
                             return CustomCardInstallation(
-                                customerName:
-                                    installationList[index].customerFullName!,
-                                mobileNumber:
-                                    installationList[index].mobileNumber!,
-                                city: installationList[index].city!,
-                                address: installationList[index].address!,
-                                symptom: installationList[index].symptom!,
-                                model: installationList[index].model!,
-                                serial: installationList[index].serial!,
-                                category: installationList[index].category!,
-                                brand: installationList[index].brand!,
-                                symptomCategory:
-                                    installationList[index].symptomCategory!);
+                              mobileUsername: widget.mobileUsername,
+                              customerName:
+                                  installationList[index].customerFullName!,
+                              mobileNumber:
+                                  installationList[index].mobileNumber!,
+                              city: installationList[index].city!,
+                              address: installationList[index].address!,
+                              symptom: installationList[index].symptom!,
+                              model: installationList[index].model!,
+                              serial: installationList[index].serial!,
+                              category: installationList[index].category!,
+                              brand: installationList[index].brand!,
+                              symptomCategory:
+                                  installationList[index].symptomCategory!,
+                              request_ID: installationList[index].requestID!,
+                            );
                           }
                           return null;
                         },
@@ -215,7 +224,8 @@ class _OrderScreenState extends State<OrderScreen>
 }
 
 class CustomCardInstallation extends StatelessWidget {
-  final String customerName,
+  final String mobileUsername,
+      customerName,
       mobileNumber,
       city,
       address,
@@ -224,20 +234,24 @@ class CustomCardInstallation extends StatelessWidget {
       serial,
       category,
       brand,
-      symptomCategory;
-  const CustomCardInstallation({
-    Key? key,
-    required this.customerName,
-    required this.mobileNumber,
-    required this.city,
-    required this.address,
-    required this.symptom,
-    required this.model,
-    required this.serial,
-    required this.category,
-    required this.brand,
-    required this.symptomCategory,
-  }) : super(key: key);
+      symptomCategory,
+      request_ID;
+
+  const CustomCardInstallation(
+      {Key? key,
+      required this.mobileUsername,
+      required this.customerName,
+      required this.mobileNumber,
+      required this.city,
+      required this.address,
+      required this.symptom,
+      required this.model,
+      required this.serial,
+      required this.category,
+      required this.brand,
+      required this.symptomCategory,
+      required this.request_ID})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -247,6 +261,7 @@ class CustomCardInstallation extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => InstallationScreen(
+                    mobileUsername: mobileUsername,
                     customerName: customerName,
                     mobileNumber: mobileNumber,
                     city: city,
@@ -257,6 +272,7 @@ class CustomCardInstallation extends StatelessWidget {
                     category: category,
                     brand: brand,
                     symptomCategory: symptomCategory,
+                    requestID: request_ID,
                   )),
         );
       },

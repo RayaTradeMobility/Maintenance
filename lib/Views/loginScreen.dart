@@ -1,7 +1,5 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/loginModel.dart';
@@ -79,19 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _loadCredentials();
   }
 
-  // bool isEmailValid(String email) {
-  //   bool emailValid = RegExp(
-  //       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-  //       .hasMatch(email);
-  //   return emailValid;
-  // }
   bool isPasswordValid(String password) => password.length >= 3;
-
-  Future<bool> onWillPop() {
-    SystemNavigator.pop();
-
-    return Future.value(true);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       try {
                         LoginModel user = await api.login(
                             emailController.text, passwordController.text);
+
 
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacement(

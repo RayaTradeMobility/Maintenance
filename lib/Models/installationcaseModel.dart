@@ -42,6 +42,7 @@ class InstallationCases {
   String? category;
   String? brand;
   String? symptomCategory;
+  String? requestID;
 
   InstallationCases(
       {this.customerFullName,
@@ -54,7 +55,8 @@ class InstallationCases {
       this.serial,
       this.category,
       this.brand,
-      this.symptomCategory});
+      this.symptomCategory,
+      this.requestID});
 
   InstallationCases.fromJson(Map<String, dynamic> json) {
     customerFullName = json['customerFullName'];
@@ -68,6 +70,7 @@ class InstallationCases {
     category = json['category'];
     brand = json['brand'];
     symptomCategory = json['symptomCategory'];
+    requestID = json['request_ID'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +86,7 @@ class InstallationCases {
     data['category'] = category;
     data['brand'] = brand;
     data['symptomCategory'] = symptomCategory;
+    data['request_ID'] = requestID;
     return data;
   }
 }
