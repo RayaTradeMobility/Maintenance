@@ -3,7 +3,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:maintenance/Models/finishInstallationModel.dart';
+import 'package:maintenance/Models/getRecommendationRepair.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
+import 'package:maintenance/Models/repaircaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
 import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
@@ -27,9 +29,9 @@ class API {
     }
   }
 
-  Future<StockModel> fetchStock(String mobileUsername) async {
+  Future<StockModel> fetchStock(String siteRequestId) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetStock?SiteRequestId=$mobileUsername'));
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetStock?SiteRequestId=$siteRequestId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
@@ -40,9 +42,9 @@ class API {
     }
   }
 
-  Future<HistoryModel> fetchHistory(String mobileUsername) async {
+  Future<HistoryModel> fetchHistory(String siteRequestId) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$mobileUsername'));
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$siteRequestId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
@@ -64,6 +66,32 @@ class API {
       throw Exception('Failed to load Installation Case data');
     }
   }
+
+  Future<RecommendationModel> fetchRepairCases(String workOrderID,String siteRequestId ) async {
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRecommendedStock?Work_Order_ID=$workOrderID&Site_Request_ID=$siteRequestId'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+      return RecommendationModel.fromJson(jsonMap);
+    } else {
+      throw Exception('Failed to load Repair recommend data');
+    }
+  }
+
+
+  Future<RepairModel> fetchRepair(String siteRequestId) async {
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairCases?SiteRequestId=$siteRequestId'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+      return RepairModel.fromJson(jsonMap);
+    } else {
+      throw Exception('Failed to load Repair Case data');
+    }
+  }
+
 
   getInstallationCase(String requestID, String mobileUsername, String serialIn,
       String serialOut, String comment, List<String> attachments) async {

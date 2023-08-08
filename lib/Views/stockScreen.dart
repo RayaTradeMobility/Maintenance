@@ -7,8 +7,8 @@ import 'package:maintenance/Models/stockModel.dart';
 import '../Constants/Constants.dart';
 
 class StockScreen extends StatefulWidget {
-  final String mobileUsername;
-  const StockScreen({Key? key, required this.mobileUsername}) : super(key: key);
+  final String siteRequestID;
+  const StockScreen({Key? key, required this.siteRequestID}) : super(key: key);
 
   @override
   StockScreenState createState() => StockScreenState();
@@ -22,21 +22,21 @@ class StockScreenState extends State<StockScreen> {
 
   @override
   void initState() {
-    _futureData = api.fetchStock(widget.mobileUsername);
+    _futureData = api.fetchStock(widget.siteRequestID);
     super.initState();
   }
 
-  List<Stock> filteredItemList = [];
-  List<Stock> itemsList = [];
-
-  void filterCrop(value) {
-    setState(() {
-      filteredItemList = itemsList
-          .where(
-              (e) => e.partNumber!.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
-  }
+  // List<Stock> filteredItemList = [];
+  // List<Stock> itemsList = [];
+  //
+  // void filterCrop(value) {
+  //   setState(() {
+  //     filteredItemList = itemsList
+  //         .where(
+  //             (e) => e.partNumber!.toLowerCase().contains(value.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

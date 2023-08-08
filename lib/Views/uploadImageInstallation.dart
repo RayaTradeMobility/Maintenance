@@ -128,8 +128,8 @@ class UploadImageButtonState extends State<UploadImageButton> {
                     ),
                   ),
                   onPressed: () {
-                    // api.getInstallationCase(widget.requestID, widget.mobileUsername, widget.serialIn, widget.serialOut,
-                    //     widget.comment, _pickedFiles.cast<String>());
+                     api.getInstallationCase(widget.requestID, widget.mobileUsername, widget.serialIn, widget.serialOut,
+                         widget.comment, _pickedFiles.cast<String>());
                     showDialog(
                       builder: (context) {
                         return AlertDialog(
@@ -140,7 +140,7 @@ class UploadImageButtonState extends State<UploadImageButton> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomePage(
+                                      builder: (context) => HomePage( siteRequestId: '',
                                         mobileUsername: widget.mobileUsername,
                                       ),
                                     ),

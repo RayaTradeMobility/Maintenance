@@ -1,15 +1,15 @@
 // ignore_for_file: file_names
 
 class InstallationModel {
-  String? code;
-  String? message;
+  HeaderInfo? headerInfo;
   List<InstallationCases>? installationCases;
 
-  InstallationModel({this.code, this.message, this.installationCases});
+  InstallationModel({this.headerInfo, this.installationCases});
 
   InstallationModel.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
+    headerInfo = json['headerInfo'] != null
+        ? HeaderInfo.fromJson(json['headerInfo'])
+        : null;
     if (json['installationCases'] != null) {
       installationCases = <InstallationCases>[];
       json['installationCases'].forEach((v) {
@@ -20,12 +20,32 @@ class InstallationModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['code'] = code;
-    data['message'] = message;
+    if (headerInfo != null) {
+      data['headerInfo'] = headerInfo!.toJson();
+    }
     if (installationCases != null) {
       data['installationCases'] =
           installationCases!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class HeaderInfo {
+  String? code;
+  String? message;
+
+  HeaderInfo({this.code, this.message});
+
+  HeaderInfo.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    message = json['message'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['message'] = message;
     return data;
   }
 }
@@ -46,17 +66,17 @@ class InstallationCases {
 
   InstallationCases(
       {this.customerFullName,
-      this.mobileNumber,
-      this.phoneNumber,
-      this.city,
-      this.address,
-      this.symptom,
-      this.model,
-      this.serial,
-      this.category,
-      this.brand,
-      this.symptomCategory,
-      this.requestID});
+        this.mobileNumber,
+        this.phoneNumber,
+        this.city,
+        this.address,
+        this.symptom,
+        this.model,
+        this.serial,
+        this.category,
+        this.brand,
+        this.symptomCategory,
+        this.requestID});
 
   InstallationCases.fromJson(Map<String, dynamic> json) {
     customerFullName = json['customerFullName'];

@@ -377,7 +377,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${widget.brand} :المنتج ',
+                                  '${widget.brand}  :المنتج ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),

@@ -6,9 +6,9 @@ import 'package:maintenance/Views/orderScreen.dart';
 import 'package:maintenance/Views/stockScreen.dart';
 
 class HomePage extends StatefulWidget {
-  final String mobileUsername;
+  final String siteRequestId , mobileUsername;
 
-  const HomePage({Key? key, required this.mobileUsername}) : super(key: key);
+  const HomePage({Key? key,required this.siteRequestId , required this.mobileUsername}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  OrderScreen(mobileUsername: widget.mobileUsername,)),
+                            builder: (context) =>  OrderScreen(mobileUsername: widget.mobileUsername, siteRequestId : widget.siteRequestId)),
                       );
                     },
                   ),
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                             builder: (context) => HistoryScreen(
-                              mobileUsername: widget.mobileUsername,
+                              siteRequestID: widget.siteRequestId,
                             ),
                           ),
                         );
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                               builder: (context) => StockScreen(
-                                    mobileUsername: widget.mobileUsername,
+                                    siteRequestID: widget.siteRequestId,
                                   )),
                         );
                       },
