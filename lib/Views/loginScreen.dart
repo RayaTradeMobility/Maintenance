@@ -7,6 +7,7 @@ import 'package:maintenance/Views/homeScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Constants/Constants.dart';
 import '../Services/checkNetwork.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -279,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: MyColorsSample.primary.withOpacity(0.8),
                     fixedSize: const Size.fromWidth(500),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0),

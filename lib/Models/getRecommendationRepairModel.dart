@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class RecommendationModel {
   HeaderInfo? headerInfo;
   List<Spares>? spares;

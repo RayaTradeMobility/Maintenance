@@ -32,6 +32,8 @@ class _OrderScreenState extends State<OrderScreen>
   List<RepairCases> repairList = [];
   ScrollController controller = ScrollController();
   API api = API();
+  bool _isLoading = false;
+  bool _isLoading2 = false;
 
   @override
   void initState() {
@@ -42,12 +44,16 @@ class _OrderScreenState extends State<OrderScreen>
       setState(() {
         installationList = InstallationModel.installationCases!;
         searchController = TextEditingController();
+        _isLoading =true ;
       });
     });
+    // ignore: avoid_types_as_parameter_names
     api.fetchRepair(widget.siteRequestId).then((RepairModel) {
       setState(() {
         repairList = RepairModel.repairCases!;
         searchController = TextEditingController();
+        _isLoading2 =true ;
+
       });
     });
   }
@@ -70,54 +76,6 @@ class _OrderScreenState extends State<OrderScreen>
         title: customSearchBar,
         centerTitle: true,
         automaticallyImplyLeading: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              if (customIcon.icon == Icons.search) {
-                setState(() {
-                  customIcon = const Icon(Icons.cancel);
-                  customSearchBar = ListTile(
-                    leading: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return const Scaffold();
-                          }),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                    title: TextField(
-                      controller: searchController,
-                      decoration: const InputDecoration(
-                        hintText: 'الطلبات',
-                        hintStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  );
-                });
-              } else {
-                setState(() {
-                  customIcon = const Icon(Icons.search);
-                });
-              }
-            },
-            icon: customIcon,
-          )
-        ],
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -165,7 +123,7 @@ class _OrderScreenState extends State<OrderScreen>
                         _refreshIndicatorKey.currentState?.show();
                         setState(() {});
                       },
-                      child: ListView.builder(
+                      child:_isLoading==false? const Center(child:CircularProgressIndicator()):  ListView.builder(
                         controller: controller,
                         itemCount: installationList.length + 1,
                         itemBuilder: (BuildContext context, int index) {
@@ -199,7 +157,7 @@ class _OrderScreenState extends State<OrderScreen>
                         _refreshIndicatorKey2.currentState?.show();
                         setState(() {});
                       },
-                      child: ListView.builder(
+                      child:_isLoading2==false? const Center(child:CircularProgressIndicator()): ListView.builder(
                         controller: controller,
                         itemCount: repairList.length + 1,
                         itemBuilder: (BuildContext context, int index) {
@@ -235,33 +193,14 @@ class _OrderScreenState extends State<OrderScreen>
 
 class CustomCardInstallation extends StatelessWidget {
   final String mobileUsername,
-      customerName,
-      mobileNumber,
-      city,
-      address,
-      symptom,
-      model,
-      serial,
-      category,
-      brand,
-      symptomCategory,
-      request_ID;
+      customerName, mobileNumber, city, address, symptom, model, serial,
+      category, brand, symptomCategory, request_ID;
 
   const CustomCardInstallation(
       {Key? key,
-      required this.mobileUsername,
-      required this.customerName,
-      required this.mobileNumber,
-      required this.city,
-      required this.address,
-      required this.symptom,
-      required this.model,
-      required this.serial,
-      required this.category,
-      required this.brand,
-      required this.symptomCategory,
-      required this.request_ID})
-      : super(key: key);
+      required this.mobileUsername, required this.customerName, required this.mobileNumber, required this.city,
+      required this.address, required this.symptom, required this.model, required this.serial, required this.category,
+      required this.brand, required this.symptomCategory, required this.request_ID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -427,7 +366,8 @@ class CustomCardInstallation extends StatelessWidget {
 class CustomCardRepair extends StatelessWidget {
   final String customerName , mobile_Number ,work_Order_ID, primary_Serial_Number ,product_Model , brand , siteRequestId ;
   const CustomCardRepair({
-    Key? key, required this.customerName, required this.mobile_Number, required this.work_Order_ID, required this.primary_Serial_Number, required this.product_Model, required this.brand, required this.siteRequestId,
+    Key? key, required this.customerName, required this.mobile_Number, required this.work_Order_ID,
+    required this.primary_Serial_Number, required this.product_Model, required this.brand, required this.siteRequestId,
   }) : super(key: key);
 
   @override
@@ -449,12 +389,16 @@ class CustomCardRepair extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              const SizedBox(
+                height: 5.0,
+              ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$customerName:الاسم ',
+                      '${customerName.replaceAll("\n", " ")} : الاسم ',
+
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
@@ -465,28 +409,15 @@ class CustomCardRepair extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       Text(
-              //         ':الاسم الاخير',
-              //         style: TextStyle(color: Colors.black),
-              //       ),
-              //       SizedBox(
-              //         width: 5.0,
-              //       ),
-              //       Icon(
-              //         Icons.account_box_rounded,
-              //         color: Colors.grey,
-              //       ),
-              //     ]),
-               Row(
+              const SizedBox(
+                height: 7.0,
+              ),
+              Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$mobile_Number:رقم الموبايل',
+                      '$mobile_Number :رقم الموبايل',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
@@ -497,84 +428,79 @@ class CustomCardRepair extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 7.0,
+              ),
                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$primary_Serial_Number:السريال',
+                      '$primary_Serial_Number :السريال',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
                       width: 5.0,
                     ),
                     const Icon(
-                      Icons.location_city,
+                      Icons.code,
                       color: Colors.grey,
                     ),
                   ]),
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       Text(
-              //         ':المنطقه',
-              //         style: TextStyle(color: Colors.black),
-              //       ),
-              //       SizedBox(
-              //         width: 5.0,
-              //       ),
-              //       Icon(
-              //         Icons.zoom_out,
-              //         color: Colors.grey,
-              //       ),
-              //     ]),
+              const SizedBox(
+                height: 7.0,
+              ),
                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$work_Order_ID:رقم العامل',
+                      '$work_Order_ID :رقم العامل',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
                       width: 5.0,
                     ),
                     const Icon(
-                      Icons.location_on,
+                      Icons.credit_card_outlined,
                       color: Colors.grey,
                     ),
                   ]),
+              const SizedBox(
+                height: 7.0,
+              ),
                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$product_Model:المنتج',
+                      '$product_Model :المنتج',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
                       width: 5.0,
                     ),
                     const Icon(
-                      Icons.branding_watermark_outlined,
+                      Icons.category,
                       color: Colors.grey,
                     ),
                   ]),
-
+              const SizedBox(
+                height: 7.0,
+              ),
                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '$brand: المركه',
+                      '$brand :المركه',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(
                       width: 5.0,
                     ),
                     const Icon(
-                      Icons.tire_repair,
+                      Icons.branding_watermark,
                       color: Colors.grey,
                     ),
                   ]),

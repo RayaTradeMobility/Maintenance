@@ -8,6 +8,7 @@ import '../Constants/Constants.dart';
 
 class StockScreen extends StatefulWidget {
   final String siteRequestID;
+
   const StockScreen({Key? key, required this.siteRequestID}) : super(key: key);
 
   @override
@@ -15,28 +16,39 @@ class StockScreen extends StatefulWidget {
 }
 
 class StockScreenState extends State<StockScreen> {
-  late Future<StockModel> _futureData;
   API api = API();
+  List<Stock> stockList = [];
+  bool _isLoading = false;
 
   TextEditingController searchController = TextEditingController();
+  List<TextEditingController> controllers = [];
+
+
+  Future<void> fetchStockCases() async {
+    StockModel fetchStock =
+    await api.fetchStock(widget.siteRequestID);
+    setState(() {
+      stockList = fetchStock.stock!;
+      _isLoading = true;
+    });
+  }
 
   @override
   void initState() {
-    _futureData = api.fetchStock(widget.siteRequestID);
     super.initState();
+    fetchStockCases();
   }
 
-  // List<Stock> filteredItemList = [];
-  // List<Stock> itemsList = [];
-  //
-  // void filterCrop(value) {
-  //   setState(() {
-  //     filteredItemList = itemsList
-  //         .where(
-  //             (e) => e.partNumber!.toLowerCase().contains(value.toLowerCase()))
-  //         .toList();
-  //   });
-  // }
+  List<Stock> filteredItemList = [];
+
+  void filterCrop(value) {
+    setState(() {
+      filteredItemList = stockList
+          .where(
+              (e) => e.partNumber!.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,82 +56,104 @@ class StockScreenState extends State<StockScreen> {
       backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       appBar: AppBar(
         backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-        shape: const RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder
+          (
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
         ),
         shadowColor: Colors.black,
         title: const Text("المخزن"),
         centerTitle: true,
-      ),
-      body: FutureBuilder<StockModel>(
-        future: _futureData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final stockModel = snapshot.data;
-            return ListView.builder(
-              itemCount: stockModel!.stock!.length,
-              itemBuilder: (context, index) {
-                final stocking = stockModel.stock![index];
+      )
+      ,
+      body: Column(
+        children: [
+        TextField(
+        controller: searchController,
+        decoration: const InputDecoration(
+            prefixIcon:Icon(Icons.search),
+            hintText: "Search for Stock code",
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                borderSide: BorderSide(color: Colors.blue)
+            )
+        ),
+        onChanged: (value){
+          filterCrop(value);
 
-                return Card(
-                  child: CustomerCard(
-                    stocking.partNumber!,
-                    stocking.spareDescription!,
-                    stocking.currentQty!,
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/blank.png',
-                    width: 130,
-                    height: 130,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    ' يوجد خطا في البانات',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            );
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/blank.png',
-                    width: 130,
-                    height: 130,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    ' جاري تحميل البيانات',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const CircularProgressIndicator(),
-                ],
-              ),
-            );
-          }
         },
       ),
+
+      Expanded(
+        child: _isLoading == false ? const Center(
+            child: CircularProgressIndicator()) : searchController.text.isEmpty
+            ? ListView.builder(
+          itemCount: stockList.length,
+          itemBuilder: (BuildContext context, int index) {
+            controllers.add(TextEditingController());
+
+            final Stock stocks = stockList[index];
+
+            return Card(
+              child: CustomerCard(
+                stocks.partNumber!,
+                stocks.spareDescription!,
+                stocks.currentQty!,
+              ),
+            );
+          },
+        )
+            : searchController.text.isNotEmpty && filteredItemList.isEmpty
+            ? const Center(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.search_off,
+                    size: 80,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Center(
+                    child: Text(
+                      'No results found,\nPlease try different keyword',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+            : filteredItemList.isNotEmpty
+            ? ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: filteredItemList.length,
+          itemBuilder: (BuildContext context, int index) {
+            controllers.add(TextEditingController());
+
+            return Card(
+              child: CustomerCard(
+                filteredItemList[index].partNumber!,
+                filteredItemList[index].spareDescription!,
+                filteredItemList[index].currentQty!,
+              ),
+            );
+          },
+        )
+            : const Center(
+          child: CircularProgressIndicator(), // Show CircularProgressIndicator if no data is available yet
+        ),
+      ),
+    ]
+      )
     );
   }
 }
@@ -128,12 +162,12 @@ class CustomerCard extends StatelessWidget {
   final String partNumber;
   final String spareDescription;
   final String currentQty;
-  const CustomerCard(
-    this.partNumber,
-    this.spareDescription,
-    this.currentQty, {
-    super.key,
-  });
+
+  const CustomerCard(this.partNumber,
+      this.spareDescription,
+      this.currentQty, {
+        super.key,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +201,8 @@ class CustomerCard extends StatelessWidget {
                         ),
                         Container(height: 10),
                         Text(
-                          "Spare Description: ${spareDescription.toLowerCase()}",
+                          "Spare Description: ${spareDescription
+                              .toLowerCase()}",
                           style: MyTextSample.body1(context)!.copyWith(
                             color: Colors.white.withOpacity(0.9),
                           ),

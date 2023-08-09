@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:maintenance/Models/finishInstallationModel.dart';
-import 'package:maintenance/Models/getRecommendationRepair.dart';
+import 'package:maintenance/Models/getRecommendationRepairModel.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/repaircaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
@@ -11,6 +11,7 @@ import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
 
 class API {
+
   login(String username, String password) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
@@ -124,4 +125,5 @@ class API {
       throw Exception('Failed to post data');
     }
   }
+
 }
