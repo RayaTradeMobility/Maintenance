@@ -1,5 +1,8 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
@@ -8,6 +11,7 @@ import 'package:maintenance/Models/repaircaseModel.dart';
 import '../Constants/Constants.dart';
 import '../Constants/order_installation_cart.dart';
 import '../Constants/order_repair_cart.dart';
+import 'package:http/http.dart' as http;
 
 class OrderScreen extends StatefulWidget {
   final String mobileUsername, siteRequestId;
@@ -37,9 +41,25 @@ class _OrderScreenState extends State<OrderScreen>
   bool _isLoading = false;
   bool _isLoading2 = false;
 
+  // String faultValue = '';
+  // List<String> faults = [''];
+
+  String repairInValue = '';
+  late int idRepairValue;
+
+  List<int> repairInID = [];
+  List<String> repairIn = [""];
+
+  String faultTypeValue = '';
+  late int idSpareValue;
+
+  List<int> spareTypeID = [];
+  List<String> spareCodeName = [""];
+
   @override
   void initState() {
     super.initState();
+    _loadData();
     _tabController = TabController(length: 2, vsync: this);
     // ignore: avoid_types_as_parameter_names
     api.fetchInstallation(widget.mobileUsername).then((InstallationModel) {
@@ -58,6 +78,66 @@ class _OrderScreenState extends State<OrderScreen>
       });
     });
   }
+
+  Future<void> _loadData() async {
+    await fetchSpareCodeType();
+    await fetchRepairIn();
+    if (kDebugMode) {
+      print('Calling');
+    }
+  }
+
+  Future<void> fetchSpareCodeType() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://www.rayatrade.com/TechnicionMobileApi//api/User/GetSpareCodeType'));
+      final data = json.decode(response.body);
+      final spareType = data['spareTypes'];
+      for (var e in spareType) {
+        spareTypeID.add(e['id']);
+        spareCodeName.add(e['name']);
+      }
+      setState(() {});
+    } catch (error) {
+      // Handle error here
+      if (kDebugMode) {
+        print('Error fetching spareCodeType: $error');
+      }
+    }
+  }
+
+  Future<void> fetchRepairIn() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairIN'));
+      final data = json.decode(response.body);
+
+      final repairType = data['repairINs'];
+
+      for (var e in repairType) {
+        repairIn.add(e['name']);
+        repairInID.add(e['id']);
+      }
+
+      setState(() {});
+      // ignore: empty_catches
+    } catch (error) {}
+  }
+
+//   Future<void> fetchFaultCode() async {
+//     try {
+//       final response = await http.get(Uri.parse(
+//           'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetFaultCode'));
+//       final data = json.decode(response.body);
+//       if (kDebugMode) {
+//         print(response.body);
+//       }
+//       setState(() {
+//         faults.addAll(List<String>.from(data['faults']));
+//       });
+// // ignore: empty_catches
+//     } catch (error) {}
+//   }
 
   @override
   void dispose() {
@@ -175,6 +255,9 @@ class _OrderScreenState extends State<OrderScreen>
                               itemBuilder: (BuildContext context, int index) {
                                 if (index < repairList.length) {
                                   return CustomCardRepair(
+                                    maintenanceRID:
+                                        repairList[index].maintenanceRID!,
+                                    mobileUsername: widget.mobileUsername,
                                     customerName:
                                         repairList[index].customerName!,
                                     mobile_Number:

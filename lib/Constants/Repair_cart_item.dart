@@ -13,7 +13,8 @@ class RepairCart extends StatefulWidget {
       campaignFinalPrice,
       serviceCode,
       serviceLevel,
-      repairModule;
+      repairModule,
+      spareRID;
   final bool isChecked;
   final VoidCallback onChecked;
 
@@ -32,6 +33,7 @@ class RepairCart extends StatefulWidget {
     required this.repairModule,
     required this.isChecked,
     required this.onChecked,
+    required this.spareRID,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,11 @@ class RepairCart extends StatefulWidget {
 }
 
 class _RepairCartState extends State<RepairCart> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -118,6 +125,9 @@ class _RepairCartState extends State<RepairCart> {
                 width: 5.0,
               ),
             ],
+          ),
+          const SizedBox(
+            height: 9.0,
           ),
           Center(
               child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [

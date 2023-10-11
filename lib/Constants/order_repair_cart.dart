@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import '../Views/repairScreen.dart';
 
 class CustomCardRepair extends StatelessWidget {
-  final String customerName,
+  final String mobileUsername,
+      customerName,
       mobile_Number,
       work_Order_ID,
       primary_Serial_Number,
       product_Model,
       brand,
-      siteRequestId;
+      siteRequestId,
+      maintenanceRID;
 
   const CustomCardRepair({
     Key? key,
@@ -22,6 +24,8 @@ class CustomCardRepair extends StatelessWidget {
     required this.product_Model,
     required this.brand,
     required this.siteRequestId,
+    required this.mobileUsername,
+    required this.maintenanceRID,
   }) : super(key: key);
 
   @override
@@ -32,7 +36,10 @@ class CustomCardRepair extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => RepairScreen(
-                  workOrderId: work_Order_ID, siteRequestId: siteRequestId)),
+                  workOrderId: work_Order_ID,
+                  siteRequestId: siteRequestId,
+                  mobileUsername: mobileUsername,
+                  maintenanceRID: maintenanceRID)),
         );
       },
       child: Card(

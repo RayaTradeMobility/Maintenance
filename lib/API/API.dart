@@ -8,6 +8,7 @@ import 'package:maintenance/Models/getRecommendationRepairModel.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/repaircaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
+import '../Models/get_order_model.dart';
 import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
 
@@ -133,6 +134,48 @@ class API {
       }
 
       throw Exception('Failed to post data');
+    }
+  }
+
+  Future<GetOrder> saveOrderOneBulk(
+      String workOrderID,
+      String siteRequestID,
+      List<String> selectedSpareCode,
+      String maintenanceRID,
+      String userName,
+      int spareType,
+      int repairIN) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinishRepairCases'));
+    request.body = json.encode({
+      "work_Order_ID": workOrderID,
+      "siteRequestId": siteRequestID,
+      "spare_RIDs": selectedSpareCode,
+      "maintenance_RID": maintenanceRID,
+      "username": userName,
+      "sparetype": spareType,
+      "repairIN": repairIN
+    });
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
     }
   }
 }

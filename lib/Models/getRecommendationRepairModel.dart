@@ -61,6 +61,7 @@ class Spares {
   String? serviceCode;
   String? serviceLevel;
   String? repairModule;
+  String? spareRID;
 
   Spares(
       {this.model,
@@ -73,7 +74,8 @@ class Spares {
       this.campaignFinalPrice,
       this.serviceCode,
       this.serviceLevel,
-      this.repairModule});
+      this.repairModule,
+      this.spareRID});
 
   Spares.fromJson(Map<String, dynamic> json) {
     model = json['model'];
@@ -87,6 +89,7 @@ class Spares {
     serviceCode = json['service_Code'];
     serviceLevel = json['service_Level'];
     repairModule = json['repair_Module'];
+    spareRID = json['spare_RID'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,6 +105,7 @@ class Spares {
     data['service_Code'] = serviceCode;
     data['service_Level'] = serviceLevel;
     data['repair_Module'] = repairModule;
+    data['spare_RID'] = spareRID;
     return data;
   }
 }
