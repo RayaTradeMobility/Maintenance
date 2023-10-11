@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 import 'package:collapsible/collapsible.dart';
 import 'package:flutter/material.dart';
-import 'package:maintenance/Views/uploadImageInstallation.dart';
 
 import '../Constants/Constants.dart';
+import '../Constants/installation_alert_dialog.dart';
 
 class InstallationScreen extends StatefulWidget {
   final String mobileUsername,
@@ -72,10 +72,13 @@ class _InstallationScreenState extends State<InstallationScreen>
                   });
             },
             style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top : Radius.circular(4) , bottom: Radius.circular(5)),
-      ),),
+              foregroundColor: Colors.white,
+              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(4), bottom: Radius.circular(5)),
+              ),
+            ),
             child: const Text('طلب'),
           ),
         ],
@@ -83,9 +86,8 @@ class _InstallationScreenState extends State<InstallationScreen>
       appBar: AppBar(
         backgroundColor: MyColorsSample.primary.withOpacity(0.8),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical( bottom: Radius.circular(15)),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
         ),
-
         title: customSearchBar,
         centerTitle: true,
         automaticallyImplyLeading: true,
@@ -223,22 +225,6 @@ class _InstallationScreenState extends State<InstallationScreen>
                             const SizedBox(
                               height: 5.0,
                             ),
-                            // const Row(
-                            //   mainAxisAlignment: MainAxisAlignment.end,
-                            //   crossAxisAlignment: CrossAxisAlignment.end,
-                            //   children: [
-                            //     Text(
-                            //       ':المنطقه ',
-                            //       style: TextStyle(
-                            //           color: Colors.black,
-                            //           fontWeight: FontWeight.bold),
-                            //     ),
-                            //     Icon(
-                            //       Icons.location_city,
-                            //       color: Colors.grey,
-                            //     ),
-                            //   ],
-                            // ),
                             const SizedBox(
                               height: 5.0,
                             ),
@@ -432,97 +418,6 @@ class _InstallationScreenState extends State<InstallationScreen>
             ],
           )),
         ),
-      ),
-    );
-  }
-}
-
-class AlertDialogPage extends StatefulWidget {
-  final String requestId, mobileUsername;
-
-  const AlertDialogPage(
-      {super.key, required this.requestId, required this.mobileUsername});
-
-  @override
-  AlertDialogPageState createState() => AlertDialogPageState();
-}
-
-class AlertDialogPageState extends State<AlertDialogPage> {
-  TextEditingController indoorController = TextEditingController();
-  TextEditingController outdoorController = TextEditingController();
-  TextEditingController commentController = TextEditingController();
-
-  get filePicker => null;
-
-  @override
-  void dispose() {
-    indoorController.dispose();
-    outdoorController.dispose();
-    commentController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Center(child: Text('طلب')),
-      icon: InkWell(
-          child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const Icon(
-                Icons.close,
-                color: Colors.black,
-              ))),
-      iconPadding: const EdgeInsets.only(left: 220, top: 20),
-      // icon: const Icon(Icons.close , color: Colors.red),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: indoorController,
-            decoration: const InputDecoration(
-              hintText: 'السريال الداخلي',
-            ),
-          ),
-          TextField(
-            controller: outdoorController,
-            decoration: const InputDecoration(
-              hintText: 'السريال الخارجي',
-            ),
-          ),
-          TextField(
-            controller: commentController,
-            decoration: const InputDecoration(
-              hintText: 'ملاحظه',
-            ),
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top : Radius.circular(4) , bottom: Radius.circular(5)),
-                ),),
-              onPressed: () {
-                showDialog(
-                  builder: (context) {
-                    return UploadImageButton(
-                      requestID: widget.requestId,
-                      mobileUsername: widget.mobileUsername,
-                      serialIn: indoorController.text,
-                      serialOut: outdoorController.text,
-                      comment: commentController.text,
-                    );
-                  },
-                  context: context,
-                );
-              },
-              child: const Text('تحميل الصور'),
-            ),
-          ])
-        ],
       ),
     );
   }

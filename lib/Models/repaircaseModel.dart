@@ -60,12 +60,12 @@ class RepairCases {
 
   RepairCases(
       {this.workOrderID,
-        this.primarySerialNumber,
-        this.productModel,
-        this.brand,
-        this.customerName,
-        this.mobileNumber,
-        this.phoneNumber});
+      this.primarySerialNumber,
+      this.productModel,
+      this.brand,
+      this.customerName,
+      this.mobileNumber,
+      this.phoneNumber});
 
   RepairCases.fromJson(Map<String, dynamic> json) {
     workOrderID = json['work_Order_ID'];

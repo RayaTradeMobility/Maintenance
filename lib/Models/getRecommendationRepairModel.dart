@@ -64,16 +64,16 @@ class Spares {
 
   Spares(
       {this.model,
-        this.offering,
-        this.spareCode,
-        this.spareDescription,
-        this.ccTReference,
-        this.cost,
-        this.finalPrice,
-        this.campaignFinalPrice,
-        this.serviceCode,
-        this.serviceLevel,
-        this.repairModule});
+      this.offering,
+      this.spareCode,
+      this.spareDescription,
+      this.ccTReference,
+      this.cost,
+      this.finalPrice,
+      this.campaignFinalPrice,
+      this.serviceCode,
+      this.serviceLevel,
+      this.repairModule});
 
   Spares.fromJson(Map<String, dynamic> json) {
     model = json['model'];

@@ -5,10 +5,14 @@ import 'package:maintenance/Views/historyScreen.dart';
 import 'package:maintenance/Views/orderScreen.dart';
 import 'package:maintenance/Views/stockScreen.dart';
 
-class HomePage extends StatefulWidget {
-  final String siteRequestId , mobileUsername;
+import '../Constants/home_card.dart';
 
-  const HomePage({Key? key,required this.siteRequestId , required this.mobileUsername}) : super(key: key);
+class HomePage extends StatefulWidget {
+  final String siteRequestId, mobileUsername;
+
+  const HomePage(
+      {Key? key, required this.siteRequestId, required this.mobileUsername})
+      : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -47,14 +51,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: SizedBox(
                   width: 190,
                   height: 190,
-                  child: CustomCard(
+                  child: HomeCart(
                     image: 'assets/order.png',
                     text: 'الطلبات',
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  OrderScreen(mobileUsername: widget.mobileUsername, siteRequestId : widget.siteRequestId)),
+                            builder: (context) => OrderScreen(
+                                mobileUsername: widget.mobileUsername,
+                                siteRequestId: widget.siteRequestId)),
                       );
                     },
                   ),
@@ -67,7 +73,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   childAspectRatio: 1 / 1.35,
                   crossAxisCount: 2,
                   children: [
-                    CustomCard(
+                    HomeCart(
                       image: 'assets/history.png',
                       text: 'السجل',
                       onPressed: () {
@@ -82,7 +88,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       },
                       // ignore: unrelated_type_equality_checks
                     ),
-                    CustomCard(
+                    HomeCart(
                       image: 'assets/stockbox.png',
                       text: 'المخزن',
                       onPressed: () {
@@ -98,52 +104,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ])
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomCard extends StatelessWidget {
-  const CustomCard({
-    Key? key,
-    required this.image,
-    required this.text,
-    required this.onPressed,
-  }) : super(key: key);
-  final String image;
-  final String text;
-  final VoidCallback onPressed;
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shadowColor: Colors.grey,
-      color: Colors.white.withOpacity(0.7),
-      elevation: 19.0,
-      child: InkWell(
-        onTap: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              image,
-              width: 100,
-              height: 100,
-            ),
-            Text(
-              text,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500),
-            ),
-          ],
         ),
       ),
     );

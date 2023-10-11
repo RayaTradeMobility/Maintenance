@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:maintenance/Models/finishInstallationModel.dart';
 import 'package:maintenance/Models/getRecommendationRepairModel.dart';
@@ -11,7 +12,6 @@ import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
 
 class API {
-
   login(String username, String password) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
@@ -48,10 +48,17 @@ class API {
         'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$siteRequestId'));
 
     if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
       final Map<String, dynamic> jsonMap = json.decode(response.body);
 
       return HistoryModel.fromJson(jsonMap);
     } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+
       throw Exception('Failed to load History order data');
     }
   }
@@ -68,7 +75,8 @@ class API {
     }
   }
 
-  Future<RecommendationModel> fetchRepairCases(String workOrderID,String siteRequestId ) async {
+  Future<RecommendationModel> fetchRepairCases(
+      String workOrderID, String siteRequestId) async {
     final response = await http.get(Uri.parse(
         'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRecommendedStock?Work_Order_ID=$workOrderID&Site_Request_ID=$siteRequestId'));
 
@@ -79,7 +87,6 @@ class API {
       throw Exception('Failed to load Repair recommend data');
     }
   }
-
 
   Future<RepairModel> fetchRepair(String siteRequestId) async {
     final response = await http.get(Uri.parse(
@@ -93,7 +100,6 @@ class API {
     }
   }
 
-
   getInstallationCase(String requestID, String mobileUsername, String serialIn,
       String serialOut, String comment, List<String> attachments) async {
     var headers = {'Content-Type': 'multipart/form-data'};
@@ -102,17 +108,11 @@ class API {
         Uri.parse(
             'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinishInstallationCases?RequestId=$requestID'
             '&MobileUsername=$mobileUsername&SerialIn=$serialIn&SerialOut=$serialOut&Comments=$comment'));
-    if (attachments[0].isNotEmpty) {
-      request.files
-          .add(await http.MultipartFile.fromPath('attacments', attachments[0]));
-    }
-    if (attachments[1].isNotEmpty) {
-      request.files
-          .add(await http.MultipartFile.fromPath('attacments', attachments[1]));
-    }
-    if (attachments[2].isNotEmpty) {
-      request.files
-          .add(await http.MultipartFile.fromPath('attacments', attachments[2]));
+    for (var attachmentPath in attachments) {
+      if (attachmentPath.isNotEmpty) {
+        request.files.add(
+            await http.MultipartFile.fromPath('attachments', attachmentPath));
+      }
     }
 
     request.headers.addAll(headers);
@@ -120,10 +120,19 @@ class API {
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print('ok');
+      }
       return Getinstallation.fromJson(jsonDecode(response.body));
     } else {
+      if (kDebugMode) {
+        print('Print ${response.statusCode}');
+        print(response.body);
+        print(request.headers);
+        print(request.files);
+      }
+
       throw Exception('Failed to post data');
     }
   }
-
 }

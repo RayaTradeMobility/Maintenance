@@ -60,9 +60,9 @@ class Orders {
 
   Orders(
       {this.workOrderID,
-        this.workStatus,
-        this.maintenanceAmount,
-        this.maintenanceFinishTime});
+      this.workStatus,
+      this.maintenanceAmount,
+      this.maintenanceFinishTime});
 
   Orders.fromJson(Map<String, dynamic> json) {
     workOrderID = json['work_order_ID'];

@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity();
-  bool _isloading =false;
+  bool _isloading = false;
   LoginModel? loginModel;
   String error = "";
   bool _passwordVisibility = true;
@@ -78,8 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _loadCredentials();
   }
 
-
   bool isEmailValid(String email) => email.isNotEmpty;
+
   bool isPasswordValid(String password) => password.length >= 3;
 
   @override
@@ -184,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     return 'برجاء ادخال الايميل الشخصي';
                   }
                 },
-
               ),
             ),
             const SizedBox(
@@ -243,28 +242,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     bool isNetworkAvailable = await checkNetwork();
                     setState(() {
                       _isloading = true;
-
                     });
                     if (!isNetworkAvailable) {
                       return;
                     }
                     if (_formKey.currentState!.validate()) {
-                        LoginModel user = await api.login(emailController.text, passwordController.text);
+                      LoginModel user = await api.login(
+                          emailController.text, passwordController.text);
 
-                        if(user.user!= null){
+                      if (user.user != null) {
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                HomePage(siteRequestId:user.user!.siteRequestId! , mobileUsername: user.user!.mobileUsername!),
+                            builder: (context) => HomePage(
+                                siteRequestId: user.user!.siteRequestId!,
+                                mobileUsername: user.user!.mobileUsername!),
                           ),
-                        ); }
-
-                      else {
-                        setState((){
+                        );
+                      } else {
+                        setState(() {
                           _isloading = false;
-
                         });
                         Fluttertoast.showToast(
                           msg: "${user.headerInfo!.message}",
@@ -286,11 +284,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(32.0),
                     ),
                   ),
-                  child:  Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _isloading ? const CircularProgressIndicator(color: Colors.white,strokeWidth: 2) :const Text("تسجيل الدخول"),
+                      _isloading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2)
+                          : const Text("تسجيل الدخول"),
                     ],
                   ),
                 ),

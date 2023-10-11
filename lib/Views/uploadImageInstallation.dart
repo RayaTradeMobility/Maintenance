@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,8 +129,21 @@ class UploadImageButtonState extends State<UploadImageButton> {
                     ),
                   ),
                   onPressed: () {
-                     api.getInstallationCase(widget.requestID, widget.mobileUsername, widget.serialIn, widget.serialOut,
-                         widget.comment, _pickedFiles.cast<String>());
+                    if (kDebugMode) {
+                      print(widget.requestID);
+                      print(widget.mobileUsername);
+                      print(widget.serialIn);
+                      print(widget.serialOut);
+                      print(widget.comment);
+                    }
+                    api.getInstallationCase(
+                      widget.requestID,
+                      widget.mobileUsername,
+                      widget.serialIn,
+                      widget.serialOut,
+                      widget.comment,
+                      _pickedFiles.map((file) => file.path).toList(),
+                    );
                     showDialog(
                       builder: (context) {
                         return AlertDialog(
@@ -140,7 +154,8 @@ class UploadImageButtonState extends State<UploadImageButton> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomePage( siteRequestId: '',
+                                      builder: (context) => HomePage(
+                                        siteRequestId: '',
                                         mobileUsername: widget.mobileUsername,
                                       ),
                                     ),
@@ -159,16 +174,13 @@ class UploadImageButtonState extends State<UploadImageButton> {
             ),
             if (_pickedFiles.isNotEmpty)
               Expanded(
-
                 child: ListView.builder(
-
                   itemCount: _pickedFiles.length,
                   itemBuilder: (context, index) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Stack(
-
                           children: [
                             Image.file(
                               _pickedFiles[index],
@@ -187,7 +199,6 @@ class UploadImageButtonState extends State<UploadImageButton> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(
-
                                     Icons.close,
                                     color: Colors.white,
                                     size: 19,
@@ -211,59 +222,5 @@ class UploadImageButtonState extends State<UploadImageButton> {
         ),
       ),
     );
-  }
-}
-
-class OTPAlertDialog extends StatefulWidget {
-  const OTPAlertDialog({Key? key}) : super(key: key);
-
-  @override
-  State<OTPAlertDialog> createState() => OTPAlertDialogState();
-}
-
-class OTPAlertDialogState extends State<OTPAlertDialog> {
-  final oTP = TextEditingController();
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-        title: const Text("برجاء ادخال رمز التحقق المرسل الي العميل"),
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('رقم العميل :'),
-              const Text("0112398274"),
-              TextFormField(
-                controller: oTP,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    hintText: "OTP",
-                    prefixIcon: const Icon(Icons.format_list_numbered),
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    )),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    isLoading = true;
-                  });
-                },
-                child: const Text("ارسال"),
-              )
-            ],
-          ),
-        ));
   }
 }
