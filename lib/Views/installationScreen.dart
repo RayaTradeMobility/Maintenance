@@ -230,13 +230,17 @@ class _InstallationScreenState extends State<InstallationScreen>
                             ),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    widget.address,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                  Container(
+                                    constraints: const BoxConstraints(
+                                        minWidth: 100, maxWidth: 200),
+                                    child: Text(
+                                      widget.address.trim(),
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                   const Text(
                                     ': العنوان',

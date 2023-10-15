@@ -48,18 +48,14 @@ class API {
     final response = await http.get(Uri.parse(
         'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$siteRequestId'));
 
+    if (kDebugMode) {
+      print(response.body);
+    }
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       final Map<String, dynamic> jsonMap = json.decode(response.body);
 
       return HistoryModel.fromJson(jsonMap);
     } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-
       throw Exception('Failed to load History order data');
     }
   }
@@ -68,8 +64,12 @@ class API {
     final response = await http.get(Uri.parse(
         'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetInstallationCases?MobileUsername=$mobileUsername'));
 
+    if (kDebugMode) {
+      print(response.body);
+    }
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
+
       return InstallationModel.fromJson(jsonMap);
     } else {
       throw Exception('Failed to load Installation Case data');
@@ -92,6 +92,10 @@ class API {
   Future<RepairModel> fetchRepair(String siteRequestId) async {
     final response = await http.get(Uri.parse(
         'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairCases?SiteRequestId=$siteRequestId'));
+
+    if (kDebugMode) {
+      print(response.body);
+    }
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
@@ -119,7 +123,15 @@ class API {
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
+
     var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print('Print ${response.statusCode}');
+      print(response.body);
+      print(request.headers);
+      print(request.files);
+    }
+
     if (response.statusCode == 200) {
       if (kDebugMode) {
         print('ok');

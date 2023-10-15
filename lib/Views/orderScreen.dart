@@ -1,17 +1,14 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/repaircaseModel.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../Constants/Constants.dart';
 import '../Constants/order_installation_cart.dart';
 import '../Constants/order_repair_cart.dart';
-import 'package:http/http.dart' as http;
 
 class OrderScreen extends StatefulWidget {
   final String mobileUsername, siteRequestId;
@@ -41,25 +38,9 @@ class _OrderScreenState extends State<OrderScreen>
   bool _isLoading = false;
   bool _isLoading2 = false;
 
-  // String faultValue = '';
-  // List<String> faults = [''];
-
-  String repairInValue = '';
-  late int idRepairValue;
-
-  List<int> repairInID = [];
-  List<String> repairIn = [""];
-
-  String faultTypeValue = '';
-  late int idSpareValue;
-
-  List<int> spareTypeID = [];
-  List<String> spareCodeName = [""];
-
   @override
   void initState() {
     super.initState();
-    _loadData();
     _tabController = TabController(length: 2, vsync: this);
     // ignore: avoid_types_as_parameter_names
     api.fetchInstallation(widget.mobileUsername).then((InstallationModel) {
@@ -78,66 +59,6 @@ class _OrderScreenState extends State<OrderScreen>
       });
     });
   }
-
-  Future<void> _loadData() async {
-    await fetchSpareCodeType();
-    await fetchRepairIn();
-    if (kDebugMode) {
-      print('Calling');
-    }
-  }
-
-  Future<void> fetchSpareCodeType() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi//api/User/GetSpareCodeType'));
-      final data = json.decode(response.body);
-      final spareType = data['spareTypes'];
-      for (var e in spareType) {
-        spareTypeID.add(e['id']);
-        spareCodeName.add(e['name']);
-      }
-      setState(() {});
-    } catch (error) {
-      // Handle error here
-      if (kDebugMode) {
-        print('Error fetching spareCodeType: $error');
-      }
-    }
-  }
-
-  Future<void> fetchRepairIn() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairIN'));
-      final data = json.decode(response.body);
-
-      final repairType = data['repairINs'];
-
-      for (var e in repairType) {
-        repairIn.add(e['name']);
-        repairInID.add(e['id']);
-      }
-
-      setState(() {});
-      // ignore: empty_catches
-    } catch (error) {}
-  }
-
-//   Future<void> fetchFaultCode() async {
-//     try {
-//       final response = await http.get(Uri.parse(
-//           'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetFaultCode'));
-//       final data = json.decode(response.body);
-//       if (kDebugMode) {
-//         print(response.body);
-//       }
-//       setState(() {
-//         faults.addAll(List<String>.from(data['faults']));
-//       });
-// // ignore: empty_catches
-//     } catch (error) {}
-//   }
 
   @override
   void dispose() {
@@ -205,8 +126,66 @@ class _OrderScreenState extends State<OrderScreen>
                         setState(() {});
                       },
                       child: _isLoading == false
-                          ? const Center(child: CircularProgressIndicator())
+                          ? Center(
+                              child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 22,
+                                  ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    mainAxisSpacing: 3.0,
+                                    crossAxisSpacing: 3.0,
+                                    childAspectRatio: 3 / 1,
+                                    crossAxisCount: 1,
+                                    children: List.generate(
+                                      4,
+                                      (index) => Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  7.4,
+                                              child: Card(
+                                                elevation: 10,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                ),
+                                                child: Container(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5.0),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4,
+                                              height: 8.0,
+                                              color: Colors.grey[300],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ))
                           : ListView.builder(
+
                               controller: controller,
                               itemCount: installationList.length + 1,
                               itemBuilder: (BuildContext context, int index) {
@@ -230,13 +209,17 @@ class _OrderScreenState extends State<OrderScreen>
                                         installationList[index].requestID!,
                                   );
                                 }
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.height /
-                                          3),
-                                  child: const Center(
-                                      child: Text('No data available')),
-                                );
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top:
+                                            MediaQuery.of(context).size.height /
+                                                3),
+                                    child: const Center(
+                                        child: Text('No data available')),
+                                  );
+                                }
+                                return null;
                               },
                             ),
                     ),
@@ -248,7 +231,64 @@ class _OrderScreenState extends State<OrderScreen>
                         setState(() {});
                       },
                       child: _isLoading2 == false
-                          ? const Center(child: CircularProgressIndicator())
+                          ? Center(
+                              child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 22,
+                                  ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    mainAxisSpacing: 3.0,
+                                    crossAxisSpacing: 3.0,
+                                    childAspectRatio: 3 / 1,
+                                    crossAxisCount: 1,
+                                    children: List.generate(
+                                      4,
+                                      (index) => Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  7.4,
+                                              child: Card(
+                                                elevation: 10,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                ),
+                                                child: Container(),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5.0),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4,
+                                              height: 8.0,
+                                              color: Colors.grey[300],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ))
                           : ListView.builder(
                               controller: controller,
                               itemCount: repairList.length + 1,
@@ -270,6 +310,16 @@ class _OrderScreenState extends State<OrderScreen>
                                         repairList[index].productModel!,
                                     brand: repairList[index].brand!,
                                     siteRequestId: widget.siteRequestId,
+                                  );
+                                }
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top:
+                                            MediaQuery.of(context).size.height /
+                                                3),
+                                    child: const Center(
+                                        child: Text('No data available')),
                                   );
                                 }
                                 return null;

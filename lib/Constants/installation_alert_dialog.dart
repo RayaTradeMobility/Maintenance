@@ -75,10 +75,12 @@ class AlertDialogPageState extends State<AlertDialogPage> {
                 ),
               ),
               onPressed: () {
+                Navigator.pop(context);
+
                 showDialog(
                   builder: (context) {
                     return UploadImageButton(
-                      requestID: widget.requestId,
+                      siteRequestID: widget.requestId,
                       mobileUsername: widget.mobileUsername,
                       serialIn: indoorController.text,
                       serialOut: outdoorController.text,

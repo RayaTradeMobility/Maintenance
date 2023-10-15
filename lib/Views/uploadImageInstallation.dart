@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -6,17 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maintenance/API/API.dart';
+import 'package:maintenance/Models/finishInstallationModel.dart';
 import 'package:maintenance/Views/homeScreen.dart';
 import '../Constants/Constants.dart';
 
 class UploadImageButton extends StatefulWidget {
   final Function(List<File>)? onImageSelected;
-  final String requestID, mobileUsername, serialIn, serialOut, comment;
+  final String siteRequestID, mobileUsername, serialIn, serialOut, comment;
 
   const UploadImageButton(
       {Key? key,
       this.onImageSelected,
-      required this.requestID,
+      required this.siteRequestID,
       required this.mobileUsername,
       required this.serialIn,
       required this.serialOut,
@@ -128,16 +129,16 @@ class UploadImageButtonState extends State<UploadImageButton> {
                           top: Radius.circular(4), bottom: Radius.circular(5)),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (kDebugMode) {
-                      print(widget.requestID);
+                      print(widget.siteRequestID);
                       print(widget.mobileUsername);
                       print(widget.serialIn);
                       print(widget.serialOut);
                       print(widget.comment);
                     }
-                    api.getInstallationCase(
-                      widget.requestID,
+                    Getinstallation user = await api.getInstallationCase(
+                      widget.siteRequestID,
                       widget.mobileUsername,
                       widget.serialIn,
                       widget.serialOut,
@@ -147,7 +148,7 @@ class UploadImageButtonState extends State<UploadImageButton> {
                     showDialog(
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text('Success'),
+                          title: Text('${user.headerInfo?.message!}'),
                           actions: [
                             ElevatedButton(
                                 onPressed: () {
@@ -155,7 +156,7 @@ class UploadImageButtonState extends State<UploadImageButton> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => HomePage(
-                                        siteRequestId: '',
+                                        siteRequestId: widget.siteRequestID,
                                         mobileUsername: widget.mobileUsername,
                                       ),
                                     ),
@@ -214,9 +215,11 @@ class UploadImageButtonState extends State<UploadImageButton> {
                 ),
               )
             else
-              Container(
-                height: 600.0,
-                color: Colors.white,
+              SingleChildScrollView(
+                child: Container(
+                  height: 400.0,
+                  color: Colors.white,
+                ),
               ),
           ],
         ),

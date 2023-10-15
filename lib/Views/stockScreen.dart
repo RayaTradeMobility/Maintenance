@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/stockModel.dart';
+import 'package:shimmer/shimmer.dart';
 import '../Constants/Constants.dart';
 import '../Constants/stock_item_cart.dart';
 
@@ -76,7 +77,55 @@ class StockScreenState extends State<StockScreen> {
           ),
           Expanded(
             child: _isLoading == false
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 22,
+                        ),
+                        GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          mainAxisSpacing: 3.0,
+                          crossAxisSpacing: 3.0,
+                          childAspectRatio: 3 / 1,
+                          crossAxisCount: 1,
+                          children: List.generate(
+                            4,
+                            (index) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height /
+                                        7.4,
+                                    child: Card(
+                                      elevation: 10,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                      ),
+                                      child: Container(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                    height: 8.0,
+                                    color: Colors.grey[300],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ))
                 : searchController.text.isEmpty
                     ? ListView.builder(
                         itemCount: stockList.length,

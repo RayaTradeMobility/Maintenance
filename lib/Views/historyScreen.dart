@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/historyModel.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../Constants/Constants.dart';
 import '../Constants/history_cart_item.dart';
@@ -43,6 +44,55 @@ class HistoryScreenState extends State<HistoryScreen> {
       body: FutureBuilder<HistoryModel>(
         future: _futureData,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 22,
+                  ),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 3.0,
+                    crossAxisSpacing: 3.0,
+                    childAspectRatio: 3 / 1,
+                    crossAxisCount: 1,
+                    children: List.generate(
+                      5,
+                      (index) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 7.4,
+                              child: Card(
+                                elevation: 10,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                child: Container(),
+                              ),
+                            ),
+                            const SizedBox(height: 5.0),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 4,
+                              height: 8.0,
+                              color: Colors.grey[300],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
           if (snapshot.hasData && snapshot.data!.headerInfo!.code == '00') {
             final historyModel = snapshot.data;
             return Column(
@@ -79,6 +129,16 @@ class HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ],
+            );
+          } else if (snapshot.hasData &&
+              snapshot.data!.headerInfo!.code == '10' &&
+              snapshot.data!.headerInfo!.message ==
+                  "There is No Orders Available") {
+            Padding(
+              padding:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+              child:
+                  Center(child: Text("${snapshot.data!.headerInfo!.message}")),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -128,6 +188,20 @@ class HistoryScreenState extends State<HistoryScreen> {
               ),
             );
           }
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.manage_history,
+                size: 120,
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Text("${snapshot.data!.headerInfo!.message}"),
+            ],
+          ));
         },
       ),
     );

@@ -1,38 +1,39 @@
 // ignore_for_file: file_names
-class Getinstallation {
-  List<Message>? message;
 
-  Getinstallation({this.message});
+class Getinstallation {
+  HeaderInfo? headerInfo;
+
+  Getinstallation({this.headerInfo});
 
   Getinstallation.fromJson(Map<String, dynamic> json) {
-    if (json['Message'] != null) {
-      message = <Message>[];
-      json['Message'].forEach((v) {
-        message!.add(Message.fromJson(v));
-      });
-    }
+    headerInfo = json['headerInfo'] != null
+        ? HeaderInfo.fromJson(json['headerInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (message != null) {
-      data['Message'] = message!.map((v) => v.toJson()).toList();
+    if (headerInfo != null) {
+      data['headerInfo'] = headerInfo!.toJson();
     }
     return data;
   }
 }
 
-class Message {
+class HeaderInfo {
+  String? code;
   String? message;
 
-  Message({this.message});
+  HeaderInfo({this.code, this.message});
 
-  Message.fromJson(Map<String, dynamic> json) {
+  HeaderInfo.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
     data['message'] = message;
     return data;
   }
