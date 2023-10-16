@@ -51,9 +51,11 @@ class _OrderScreenState extends State<OrderScreen>
       });
     });
     // ignore: avoid_types_as_parameter_names
-    api.fetchRepair(widget.siteRequestId).then((RepairModel) {
+    api
+        .fetchRepair(widget.siteRequestId, widget.mobileUsername)
+        .then((repairModel) {
       setState(() {
-        repairList = RepairModel.repairCases!;
+        repairList = repairModel.repairCases!;
         searchController = TextEditingController();
         _isLoading2 = true;
       });
@@ -185,7 +187,6 @@ class _OrderScreenState extends State<OrderScreen>
                               ),
                             ))
                           : ListView.builder(
-
                               controller: controller,
                               itemCount: installationList.length + 1,
                               itemBuilder: (BuildContext context, int index) {
@@ -214,9 +215,15 @@ class _OrderScreenState extends State<OrderScreen>
                                     padding: EdgeInsets.only(
                                         top:
                                             MediaQuery.of(context).size.height /
-                                                3),
-                                    child: const Center(
-                                        child: Text('No data available')),
+                                                7),
+                                    child: const Column(
+                                      children: [
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/norecords.png')),
+                                        Text('No data available'),
+                                      ],
+                                    ),
                                   );
                                 }
                                 return null;
@@ -310,6 +317,7 @@ class _OrderScreenState extends State<OrderScreen>
                                         repairList[index].productModel!,
                                     brand: repairList[index].brand!,
                                     siteRequestId: widget.siteRequestId,
+                                    priority: repairList[index].casePriority!,
                                   );
                                 }
                                 if (index == 0) {
@@ -317,9 +325,15 @@ class _OrderScreenState extends State<OrderScreen>
                                     padding: EdgeInsets.only(
                                         top:
                                             MediaQuery.of(context).size.height /
-                                                3),
-                                    child: const Center(
-                                        child: Text('No data available')),
+                                                7),
+                                    child: const Column(
+                                      children: [
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/norecords.png')),
+                                        Text('No data available'),
+                                      ],
+                                    ),
                                   );
                                 }
                                 return null;

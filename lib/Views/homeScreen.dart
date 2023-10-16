@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/Views/historyScreen.dart';
 import 'package:maintenance/Views/orderScreen.dart';
@@ -55,6 +56,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     image: 'assets/order.png',
                     text: 'الطلبات',
                     onPressed: () {
+                      if (kDebugMode) {
+                        print(widget.siteRequestId);
+                        print(widget.mobileUsername);
+
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -80,8 +86,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HistoryScreen(
-                              siteRequestID: widget.siteRequestId,
+                            builder: (context) =>
+
+                                HistoryScreen(
+                              siteRequestID: widget.siteRequestId, mobileUsername: widget.mobileUsername,
                             ),
                           ),
                         );

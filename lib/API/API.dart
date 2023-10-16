@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:maintenance/Models/finishInstallationModel.dart';
 import 'package:maintenance/Models/getRecommendationRepairModel.dart';
+import 'package:maintenance/Models/getSparesOnCaseModel.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/repaircaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
@@ -44,9 +45,10 @@ class API {
     }
   }
 
-  Future<HistoryModel> fetchHistory(String siteRequestId) async {
+  Future<HistoryModel> fetchHistory(
+      String siteRequestId, String mobileUsername) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User//GetHistory?SiteRequestId=$siteRequestId'));
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetHistory?SiteRequestId=$siteRequestId&MobileUsername=$mobileUsername'));
 
     if (kDebugMode) {
       print(response.body);
@@ -81,6 +83,9 @@ class API {
     final response = await http.get(Uri.parse(
         'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRecommendedStock?Work_Order_ID=$workOrderID&Site_Request_ID=$siteRequestId'));
 
+    if (kDebugMode) {
+      print(response.body);
+    }
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
       return RecommendationModel.fromJson(jsonMap);
@@ -89,9 +94,10 @@ class API {
     }
   }
 
-  Future<RepairModel> fetchRepair(String siteRequestId) async {
+  Future<RepairModel> fetchRepair(
+      String siteRequestId, String mobileUsername) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairCases?SiteRequestId=$siteRequestId'));
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairCases?SiteRequestId=$siteRequestId&Username=$mobileUsername'));
 
     if (kDebugMode) {
       print(response.body);
@@ -150,26 +156,23 @@ class API {
   }
 
   Future<GetOrder> saveOrderOneBulk(
-      String workOrderID,
-      String siteRequestID,
-      List<String> selectedSpareCode,
-      String maintenanceRID,
-      String userName,
-      int spareType,
-      int repairIN) async {
+    String workOrderID,
+    String siteRequestID,
+    List<dynamic> selectedSpareCode,
+    String maintenanceRID,
+    String userName,
+  ) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
         'POST',
         Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinishRepairCases'));
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/AddLinesSpares'));
     request.body = json.encode({
       "work_Order_ID": workOrderID,
       "siteRequestId": siteRequestID,
       "spare_RIDs": selectedSpareCode,
       "maintenance_RID": maintenanceRID,
       "username": userName,
-      "sparetype": spareType,
-      "repairIN": repairIN
     });
     request.headers.addAll(headers);
 
@@ -180,6 +183,143 @@ class API {
         print(request.body);
         print(response.body);
       }
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetSparesOnCase> fetchSparesCases(
+      String workOrderID, String mobileUsername) async {
+    final response = await http.get(Uri.parse(
+        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetSparesOnCase?Username=$mobileUsername&workOrderID=$workOrderID'));
+
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+      return GetSparesOnCase.fromJson(jsonMap);
+    } else {
+      throw Exception('Failed to load Repair recommend data');
+    }
+  }
+
+  Future<GetOrder> deleteSpareCase(
+    String requestId,
+    String siteRequestID,
+    String spareRID,
+    String userName,
+  ) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'DELETE',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/DeleteSpare?RequestID=$requestId&Username=$userName&site_RID=$siteRequestID&spareRID=$spareRID'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> cancelSpareCase(
+    String comment,
+    String workOrderId,
+    String userName,
+  ) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/CancelCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> finishSpareCase(
+    String comment,
+    String workOrderId,
+    String userName,
+  ) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinshCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> resceduleSpareCase(
+    String comment,
+    String workOrderId,
+    String userName,
+  ) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/ResceduleCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
       return GetOrder.fromJson(jsonDecode(response.body));
     } else {
       if (kDebugMode) {

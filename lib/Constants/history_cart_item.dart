@@ -57,7 +57,7 @@ class HistoryCart extends StatelessWidget {
                         ),
                         Container(height: 10),
                         Text(
-                          "Maintenance Total Amount: $maintenanceFinishTime",
+                          "Maintenance Finish Time: $maintenanceFinishTime",
                           maxLines: 2,
                           style: MyTextSample.subhead(context)!
                               .copyWith(color: Colors.white, fontSize: 12),

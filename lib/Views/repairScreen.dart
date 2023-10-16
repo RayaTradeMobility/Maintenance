@@ -1,17 +1,17 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/getRecommendationRepairModel.dart';
-import 'package:maintenance/Models/get_order_model.dart';
-import 'package:maintenance/Views/homeScreen.dart';
+import 'package:maintenance/Views/FinalStepRepairScreen.dart';
+
+import 'package:shimmer/shimmer.dart';
 import '../Constants/Constants.dart';
 import '../Constants/Repair_cart_item.dart';
-import 'package:http/http.dart' as http;
+import '../Models/get_order_model.dart';
+import 'homeScreen.dart';
 
 class RepairScreen extends StatefulWidget {
   final String workOrderId, siteRequestId;
@@ -38,90 +38,17 @@ class _RepairScreenState extends State<RepairScreen> {
   List<TextEditingController> controllers = [];
   List<Spares> filteredItemList = [];
 
-  List<String> selectedSpareCodes = [];
-
+  List<dynamic> selectedSpareCodes = [];
+  List<dynamic> filteredList = [];
   API api = API();
-
-  // String faultValue = '';
-  // List<String> faults = [''];
-
-  String repairInValue = '';
-  int idRepairValue = 0;
-  List<int> repairInID = [];
-  List<String> repairIn = [""];
-
-  String faultTypeValue = '';
-  int idSpareValue = 0;
-  List<int> spareTypeID = [];
-  List<String> spareCodeName = [""];
 
   @override
   void initState() {
     super.initState();
     fetchRepairCases();
-    _loadData();
+    // _loadData();
   }
 
-  Future<void> _loadData() async {
-    await fetchSpareCodeType();
-    // await fetchFaultCode();
-    await fetchRepairIn();
-    if (kDebugMode) {
-      print('Calling');
-    }
-  }
-
-  Future<void> fetchSpareCodeType() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi//api/User/GetSpareCodeType'));
-      final data = json.decode(response.body);
-      final spareType = data['spareTypes'];
-      for (var e in spareType) {
-        spareTypeID.add(e['id']);
-        spareCodeName.add(e['name']);
-      }
-      setState(() {});
-    } catch (error) {
-      // Handle error here
-      if (kDebugMode) {
-        print('Error fetching spareCodeType: $error');
-      }
-    }
-  }
-
-  Future<void> fetchRepairIn() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairIN'));
-      final data = json.decode(response.body);
-
-      final repairType = data['repairINs'];
-
-      for (var e in repairType) {
-        repairIn.add(e['name']);
-        repairInID.add(e['id']);
-      }
-
-      setState(() {});
-      // ignore: empty_catches
-    } catch (error) {}
-  }
-
-//   Future<void> fetchFaultCode() async {
-//     try {
-//       final response = await http.get(Uri.parse(
-//           'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetFaultCode'));
-//       final data = json.decode(response.body);
-//       if (kDebugMode) {
-//         print(response.body);
-//       }
-//       setState(() {
-//         faults.addAll(List<String>.from(data['faults']));
-//       });
-// // ignore: empty_catches
-//     } catch (error) {}
-//   }
   void filterCrop(value) {
     setState(() {
       filteredItemList = sparesList
@@ -163,277 +90,280 @@ class _RepairScreenState extends State<RepairScreen> {
         centerTitle: true,
         automaticallyImplyLeading: true,
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: "Search for repair code",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Colors.blue))),
-            onChanged: (value) {
-              filterCrop(value);
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DropdownButton<String>(
-                hint: const Text(''),
-                value: faultTypeValue,
-                dropdownColor: Colors.blueGrey[50],
-                itemHeight: null,
-                menuMaxHeight: 292,
-                borderRadius: BorderRadius.circular(10),
-                alignment: AlignmentDirectional.center,
-                icon: const Icon(Icons.arrow_drop_down_sharp),
-                elevation: 16,
-                style: const TextStyle(color: Colors.black),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    faultTypeValue = newValue!;
-                    idSpareValue =
-                        spareTypeID[spareCodeName.indexOf(faultTypeValue)];
-                  });
-                },
-                items: spareCodeName.isEmpty && spareCodeName == [""]
-                    ? [
-                        DropdownMenuItem<String>(
-                          value: null,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width - 180,
-                            child: const Center(
-                                child: CircularProgressIndicator()),
-                          ),
-                        ),
-                      ]
-                    : spareCodeName
-                        .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width - 180,
-                            child: Center(child: Text(value)),
-                          ),
-                        );
-                      }).toList(),
-              ),
-              const Text(':نوع كود القطعه  ')
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DropdownButton<String>(
-                hint: const Text(''),
-                value: repairInValue,
-                dropdownColor: Colors.blueGrey[50],
-                itemHeight: null,
-                menuMaxHeight: 292,
-                borderRadius: BorderRadius.circular(10),
-                alignment: AlignmentDirectional.center,
-                icon: const Icon(Icons.arrow_drop_down_sharp),
-                elevation: 16,
-                style: const TextStyle(color: Colors.black),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    repairInValue = newValue!;
-                    idRepairValue = repairInID[repairIn.indexOf(repairInValue)];
-                  });
-                },
-                items: repairIn.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 180,
-                      child: Center(child: Text(value)),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const Text(':Repair In  ')
-            ],
-          ),
-          Expanded(
-            child: _isLoading == false
-                ? const Center(child: CircularProgressIndicator())
-                : searchController.text.isEmpty
-                    ? ListView.builder(
-                        itemCount: sparesList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          controllers.add(TextEditingController());
-
-                          final Spares spares = sparesList[index];
-
-                          return RepairCart(
-                            model: spares.model!,
-                            offering: spares.offering!,
-                            spareCode: spares.spareCode!,
-                            spareDescription: spares.spareDescription!,
-                            ccTReference: spares.ccTReference!,
-                            cost: spares.cost!,
-                            finalPrice: spares.finalPrice!,
-                            campaignFinalPrice: spares.campaignFinalPrice!,
-                            serviceCode: spares.serviceCode!,
-                            serviceLevel: spares.serviceLevel!,
-                            repairModule: spares.repairModule!,
-                            isChecked:
-                                selectedSpareCodes.contains(spares.spareRID),
-                            onChecked: () => toggleSpareCode(spares.spareRID!),
-                            spareRID: spares.spareRID!,
-                          );
-                        },
-                      )
-                    : searchController.text.isNotEmpty &&
-                            filteredItemList.isEmpty
-                        ? const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.search_off,
-                                      size: 80,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Center(
-                                      child: Text(
-                                        'No results found,\nPlease try different keyword',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+      body: sparesList.isEmpty
+          ? const Column(
+              children: [
+                Image(image: AssetImage('assets/noresult.png')),
+                Text('There is no Parts Available for this Case')
+              ],
+            )
+          : Column(
+              children: [
+                TextField(
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: "Search for repair code",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                          borderSide: BorderSide(color: Colors.blue))),
+                  onChanged: (value) {
+                    filterCrop(value);
+                  },
+                ),
+                Expanded(
+                  child: _isLoading == false
+                      ? Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 42,
                               ),
-                            ),
-                          )
-                        : filteredItemList.isNotEmpty
-                            ? ListView.builder(
-                                scrollDirection: Axis.vertical,
+                              GridView.count(
                                 shrinkWrap: true,
-                                itemCount: filteredItemList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  controllers.add(TextEditingController());
-
-                                  return RepairCart(
-                                    model: filteredItemList[index].model!,
-                                    offering: filteredItemList[index].offering!,
-                                    spareCode:
-                                        filteredItemList[index].spareCode!,
-                                    spareDescription: filteredItemList[index]
-                                        .spareDescription!,
-                                    ccTReference:
-                                        filteredItemList[index].ccTReference!,
-                                    cost: filteredItemList[index].cost!,
-                                    finalPrice:
-                                        filteredItemList[index].finalPrice!,
-                                    campaignFinalPrice: filteredItemList[index]
-                                        .campaignFinalPrice!,
-                                    serviceCode:
-                                        filteredItemList[index].serviceCode!,
-                                    serviceLevel:
-                                        filteredItemList[index].serviceLevel!,
-                                    repairModule:
-                                        filteredItemList[index].repairModule!,
-                                    isChecked: selectedSpareCodes.contains(
-                                        filteredItemList[index].spareRID),
-                                    onChecked: () => toggleSpareCode(
-                                        filteredItemList[index].spareRID!),
-                                    spareRID: filteredItemList[index].spareRID!,
-                                  );
-                                },
-                              )
-                            : const Center(
-                                child:
-                                    CircularProgressIndicator(), // Show CircularProgressIndicator if no data is available yet
+                                physics: const NeverScrollableScrollPhysics(),
+                                mainAxisSpacing: 3.0,
+                                crossAxisSpacing: 3.0,
+                                childAspectRatio: 3 / 1,
+                                crossAxisCount: 1,
+                                children: List.generate(
+                                  4,
+                                  (index) => Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              7.4,
+                                          child: Card(
+                                            elevation: 10,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            child: Container(),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              4,
+                                          height: 8.0,
+                                          color: Colors.grey[300],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(4), bottom: Radius.circular(5)),
-              ),
-            ),
-            onPressed: () async {
-              if (kDebugMode) {
-                print(widget.workOrderId);
-                print(widget.siteRequestId);
-                print(selectedSpareCodes);
-                print(widget.maintenanceRID);
-                print(widget.mobileUsername);
-                print(idSpareValue);
-                print(idRepairValue);
-              }
-              if (idRepairValue != 0 &&
-                  idSpareValue != 0 &&
-                  selectedSpareCodes.isNotEmpty) {
-                GetOrder res = await api.saveOrderOneBulk(
-                    widget.workOrderId,
-                    widget.siteRequestId,
-                    selectedSpareCodes,
-                    widget.maintenanceRID,
-                    widget.mobileUsername,
-                    idSpareValue,
-                    idRepairValue);
-                if (res.code == '00') {
-                  Fluttertoast.showToast(
-                      msg: res.message!,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                            ],
+                          ),
+                        )
+                      : searchController.text.isEmpty
+                          ? ListView.builder(
+                              itemCount: sparesList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                controllers.add(TextEditingController());
 
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return HomePage(
-                      siteRequestId: widget.siteRequestId,
-                      mobileUsername: widget.mobileUsername,
+                                final Spares spares = sparesList[index];
+
+                                return RepairCart(
+                                  model: spares.model!,
+                                  offering: spares.offering!,
+                                  spareCode: spares.spareCode!,
+                                  spareDescription: spares.spareDescription!,
+                                  ccTReference: spares.ccTReference!,
+                                  cost: spares.cost!,
+                                  finalPrice: spares.finalPrice!,
+                                  campaignFinalPrice:
+                                      spares.campaignFinalPrice!,
+                                  serviceCode: spares.serviceCode!,
+                                  serviceLevel: spares.serviceLevel!,
+                                  repairModule: spares.repairModule!,
+                                  isChecked: selectedSpareCodes
+                                      .contains(spares.spareRID),
+                                  // onChecked: () => toggleSpareCode(spares.spareRID!),
+                                  spareRID: spares.spareRID!,
+                                  onChecked: (List<dynamic> selectedDropDown) {
+                                    toggleSpareCode(spares.spareRID!);
+                                    // selectedSpareCodes.remove(spares.spareRID!);
+
+                                    selectedSpareCodes.add(selectedDropDown);
+                                  },
+                                );
+                              },
+                            )
+                          : searchController.text.isNotEmpty &&
+                                  filteredItemList.isEmpty
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.search_off,
+                                            size: 80,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Center(
+                                            child: Text(
+                                              'No results found,\nPlease try different keyword',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : filteredItemList.isNotEmpty
+                                  ? ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: filteredItemList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        controllers
+                                            .add(TextEditingController());
+
+                                        return RepairCart(
+                                          model: filteredItemList[index].model!,
+                                          offering:
+                                              filteredItemList[index].offering!,
+                                          spareCode: filteredItemList[index]
+                                              .spareCode!,
+                                          spareDescription:
+                                              filteredItemList[index]
+                                                  .spareDescription!,
+                                          ccTReference: filteredItemList[index]
+                                              .ccTReference!,
+                                          cost: filteredItemList[index].cost!,
+                                          finalPrice: filteredItemList[index]
+                                              .finalPrice!,
+                                          campaignFinalPrice:
+                                              filteredItemList[index]
+                                                  .campaignFinalPrice!,
+                                          serviceCode: filteredItemList[index]
+                                              .serviceCode!,
+                                          serviceLevel: filteredItemList[index]
+                                              .serviceLevel!,
+                                          repairModule: filteredItemList[index]
+                                              .repairModule!,
+                                          isChecked: selectedSpareCodes
+                                              .contains(filteredItemList[index]
+                                                  .spareRID),
+                                          onChecked:
+                                              (List<dynamic> selectedDropDown) {
+                                            toggleSpareCode(
+                                                filteredItemList[index]
+                                                    .spareRID!);
+                                            // selectedSpareCodes.remove(filteredItemList[index].spareRID!);
+                                            selectedSpareCodes
+                                                .add(selectedDropDown);
+                                          },
+                                          spareRID:
+                                              filteredItemList[index].spareRID!,
+                                        );
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(4), bottom: Radius.circular(5)),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (kDebugMode) {
+                      print(widget.workOrderId);
+                      print(widget.siteRequestId);
+                      // print(selectedSpareCodes);
+                      print(widget.maintenanceRID);
+                      print(widget.mobileUsername);
+                      filteredList = selectedSpareCodes;
+
+                      print(filteredList);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FinalStepRepairScreen(
+                                workOrderID: widget.workOrderId,
+                                mobileUsername: widget.mobileUsername, siteRequestId: widget.siteRequestId,
+                              )),
                     );
-                  }));
-                }
-                {
-                  Fluttertoast.showToast(
-                      msg: res.message!,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-              }
+                    if (filteredList.isNotEmpty) {
+                      GetOrder res = await api.saveOrderOneBulk(
+                          widget.workOrderId,
+                          widget.siteRequestId,
+                          filteredList,
+                          widget.maintenanceRID,
+                          widget.mobileUsername);
+                      if (res.code == '00') {
+                        Fluttertoast.showToast(
+                            msg: res.message!,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.grey,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
 
-              if (idRepairValue == 0 ||
-                  idSpareValue == 0 ||
-                  selectedSpareCodes.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: "برجاء اختيار البيانات المطلوبه",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.grey,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-            },
-            child: const Text("طلب"),
-          )
-        ],
-      ),
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return HomePage(
+                            siteRequestId: widget.siteRequestId,
+                            mobileUsername: widget.mobileUsername,
+                          );
+                        }));
+                      }
+                      {
+                        Fluttertoast.showToast(
+                            msg: res.message!,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.grey,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
+                    }
+
+                    if (selectedSpareCodes.isEmpty) {
+                      Fluttertoast.showToast(
+                          msg: "برجاء اختيار البيانات المطلوبه",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    }
+                  },
+                  child: const Text("طلب"),
+                )
+              ],
+            ),
     );
   }
 }

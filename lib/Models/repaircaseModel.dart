@@ -58,16 +58,18 @@ class RepairCases {
   String? mobileNumber;
   String? phoneNumber;
   String? maintenanceRID;
+  String? casePriority;
 
   RepairCases(
       {this.workOrderID,
-      this.primarySerialNumber,
-      this.productModel,
-      this.brand,
-      this.customerName,
-      this.mobileNumber,
-      this.phoneNumber,
-      this.maintenanceRID});
+        this.primarySerialNumber,
+        this.productModel,
+        this.brand,
+        this.customerName,
+        this.mobileNumber,
+        this.phoneNumber,
+        this.maintenanceRID,
+        this.casePriority});
 
   RepairCases.fromJson(Map<String, dynamic> json) {
     workOrderID = json['work_Order_ID'];
@@ -78,6 +80,7 @@ class RepairCases {
     mobileNumber = json['mobile_Number'];
     phoneNumber = json['phone_Number'];
     maintenanceRID = json['maintenance_RID'];
+    casePriority = json['case_Priority'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +93,7 @@ class RepairCases {
     data['mobile_Number'] = mobileNumber;
     data['phone_Number'] = phoneNumber;
     data['maintenance_RID'] = maintenanceRID;
+    data['case_Priority'] = casePriority;
     return data;
   }
 }
