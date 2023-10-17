@@ -42,7 +42,6 @@ class AlertDialogPageState extends State<AlertDialogPage> {
                 color: Colors.black,
               ))),
       iconPadding: const EdgeInsets.only(left: 220, top: 20),
-      // icon: const Icon(Icons.close , color: Colors.red),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

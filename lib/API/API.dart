@@ -14,12 +14,11 @@ import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
 
 class API {
+  String url = 'http://www.rayatrade.com/TechnicionMobileApi/api/User';
+
   login(String username, String password) async {
     var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/Login'));
+    var request = http.Request('POST', Uri.parse('$url/Login'));
     request.body = json.encode({"username": username, "password": password});
     request.headers.addAll(headers);
 
@@ -33,8 +32,8 @@ class API {
   }
 
   Future<StockModel> fetchStock(String siteRequestId) async {
-    final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetStock?SiteRequestId=$siteRequestId'));
+    final response =
+        await http.get(Uri.parse('$url/GetStock?SiteRequestId=$siteRequestId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonMap = json.decode(response.body);
@@ -48,7 +47,7 @@ class API {
   Future<HistoryModel> fetchHistory(
       String siteRequestId, String mobileUsername) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetHistory?SiteRequestId=$siteRequestId&MobileUsername=$mobileUsername'));
+        '$url/GetHistory?SiteRequestId=$siteRequestId&MobileUsername=$mobileUsername'));
 
     if (kDebugMode) {
       print(response.body);
@@ -63,8 +62,8 @@ class API {
   }
 
   Future<InstallationModel> fetchInstallation(String mobileUsername) async {
-    final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetInstallationCases?MobileUsername=$mobileUsername'));
+    final response = await http.get(
+        Uri.parse('$url/GetInstallationCases?MobileUsername=$mobileUsername'));
 
     if (kDebugMode) {
       print(response.body);
@@ -81,7 +80,7 @@ class API {
   Future<RecommendationModel> fetchRepairCases(
       String workOrderID, String siteRequestId) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRecommendedStock?Work_Order_ID=$workOrderID&Site_Request_ID=$siteRequestId'));
+        '$url/GetRecommendedStock?Work_Order_ID=$workOrderID&Site_Request_ID=$siteRequestId'));
 
     if (kDebugMode) {
       print(response.body);
@@ -97,7 +96,7 @@ class API {
   Future<RepairModel> fetchRepair(
       String siteRequestId, String mobileUsername) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairCases?SiteRequestId=$siteRequestId&Username=$mobileUsername'));
+        '$url/GetRepairCases?SiteRequestId=$siteRequestId&Username=$mobileUsername'));
 
     if (kDebugMode) {
       print(response.body);
@@ -116,8 +115,7 @@ class API {
     var headers = {'Content-Type': 'multipart/form-data'};
     var request = http.MultipartRequest(
         'POST',
-        Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinishInstallationCases?RequestId=$requestID'
+        Uri.parse('$url/FinishInstallationCases?RequestId=$requestID'
             '&MobileUsername=$mobileUsername&SerialIn=$serialIn&SerialOut=$serialOut&Comments=$comment'));
     for (var attachmentPath in attachments) {
       if (attachmentPath.isNotEmpty) {
@@ -163,10 +161,7 @@ class API {
     String userName,
   ) async {
     var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/AddLinesSpares'));
+    var request = http.Request('POST', Uri.parse('$url/AddLinesSpares'));
     request.body = json.encode({
       "work_Order_ID": workOrderID,
       "siteRequestId": siteRequestID,
@@ -197,7 +192,7 @@ class API {
   Future<GetSparesOnCase> fetchSparesCases(
       String workOrderID, String mobileUsername) async {
     final response = await http.get(Uri.parse(
-        'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetSparesOnCase?Username=$mobileUsername&workOrderID=$workOrderID'));
+        '$url/GetSparesOnCase?Username=$mobileUsername&workOrderID=$workOrderID'));
 
     if (kDebugMode) {
       print(response.body);
@@ -220,7 +215,7 @@ class API {
     var request = http.Request(
         'DELETE',
         Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/DeleteSpare?RequestID=$requestId&Username=$userName&site_RID=$siteRequestID&spareRID=$spareRID'));
+            '$url/DeleteSpare?RequestID=$requestId&Username=$userName&site_RID=$siteRequestID&spareRID=$spareRID'));
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
@@ -250,7 +245,7 @@ class API {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/CancelCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+            '$url/CancelCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
@@ -258,6 +253,8 @@ class API {
     var response = await http.Response.fromStream(streamedResponse);
     if (kDebugMode) {
       print(response.body);
+
+      print(request.body);
     }
     if (response.statusCode == 200) {
       return GetOrder.fromJson(jsonDecode(response.body));
@@ -280,7 +277,7 @@ class API {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/FinshCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+            '$url/FinshCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
@@ -310,13 +307,14 @@ class API {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'http://www.rayatrade.com/TechnicionMobileApi/api/User/ResceduleCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+            '$url/ResceduleCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
 
     var response = await http.Response.fromStream(streamedResponse);
     if (kDebugMode) {
+      print(request.body);
       print(response.body);
     }
     if (response.statusCode == 200) {

@@ -21,8 +21,7 @@ class RepairCart extends StatefulWidget {
       repairModule,
       spareRID;
   final bool isChecked;
-  final Function(List<dynamic> selectedDropDown) onChecked; // Updated callback signature
-
+  final Function(List<dynamic> selectedDropDown) onChecked;
 
   const RepairCart({
     Key? key,
@@ -47,8 +46,8 @@ class RepairCart extends StatefulWidget {
 }
 
 class _RepairCartState extends State<RepairCart> {
-
-   late List<dynamic> selectedDropDown = [widget.spareRID];
+  late List<dynamic> selectedDropDown = [widget.spareRID];
+  String url = 'http://www.rayatrade.com/TechnicionMobileApi/api/User';
 
   String repairInValue = '';
   int idRepairValue = -1;
@@ -66,7 +65,6 @@ class _RepairCartState extends State<RepairCart> {
     _loadData();
   }
 
-
   Future<void> _loadData() async {
     await fetchSpareCodeType();
     // await fetchFaultCode();
@@ -78,8 +76,7 @@ class _RepairCartState extends State<RepairCart> {
 
   Future<void> fetchSpareCodeType() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi//api/User/GetSpareCodeType'));
+      final response = await http.get(Uri.parse('$url/GetSpareCodeType'));
       final data = json.decode(response.body);
       final spareType = data['spareTypes'];
       for (var e in spareType) {
@@ -88,7 +85,6 @@ class _RepairCartState extends State<RepairCart> {
       }
       setState(() {});
     } catch (error) {
-      // Handle error here
       if (kDebugMode) {
         print('Error fetching spareCodeType: $error');
       }
@@ -97,8 +93,7 @@ class _RepairCartState extends State<RepairCart> {
 
   Future<void> fetchRepairIn() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://www.rayatrade.com/TechnicionMobileApi/api/User/GetRepairIN'));
+      final response = await http.get(Uri.parse('$url/GetRepairIN'));
       final data = json.decode(response.body);
 
       final repairType = data['repairINs'];
@@ -211,31 +206,31 @@ class _RepairCartState extends State<RepairCart> {
                   setState(() {
                     faultTypeValue = newValue!;
                     idSpareValue =
-                    spareTypeID[spareCodeName.indexOf(faultTypeValue) -1 ];
+                        spareTypeID[spareCodeName.indexOf(faultTypeValue) - 1];
                     selectedDropDown.add(idSpareValue);
                   });
                 },
                 items: spareCodeName.isEmpty && spareCodeName == [""]
                     ? [
-                  DropdownMenuItem<String>(
-                    value: null,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 180,
-                      child: const Center(
-                          child: CircularProgressIndicator()),
-                    ),
-                  ),
-                ]
+                        DropdownMenuItem<String>(
+                          value: null,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width - 180,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          ),
+                        ),
+                      ]
                     : spareCodeName
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 180,
-                      child: Center(child: Text(value)),
-                    ),
-                  );
-                }).toList(),
+                        .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width - 180,
+                            child: Center(child: Text(value)),
+                          ),
+                        );
+                      }).toList(),
               ),
               const Text(':نوع كود القطعه  ')
             ],
@@ -260,7 +255,8 @@ class _RepairCartState extends State<RepairCart> {
                 onChanged: (String? newValue) {
                   setState(() {
                     repairInValue = newValue!;
-                    idRepairValue = repairInID[repairIn.indexOf(repairInValue) - 1];
+                    idRepairValue =
+                        repairInID[repairIn.indexOf(repairInValue) - 1];
                     selectedDropDown.add(idRepairValue);
                   });
                 },
@@ -289,10 +285,9 @@ class _RepairCartState extends State<RepairCart> {
                   print(selectedDropDown);
                 }
 
-                if(idRepairValue != -1 && idSpareValue != -1 ) {
+                if (idRepairValue != -1 && idSpareValue != -1) {
                   widget.onChecked(selectedDropDown);
-                }
-                else {
+                } else {
                   Fluttertoast.showToast(
                       msg: "Please select Values",
                       toastLength: Toast.LENGTH_SHORT,

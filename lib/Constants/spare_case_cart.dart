@@ -18,7 +18,8 @@ class ItemCardSpareCases extends StatelessWidget {
       spareRID,
       siteRequestId,
       workOrderId,
-      mobileUsername;
+      mobileUsername,
+      maintenanceRID;
 
   const ItemCardSpareCases({
     super.key,
@@ -32,6 +33,7 @@ class ItemCardSpareCases extends StatelessWidget {
     required this.siteRequestId,
     required this.workOrderId,
     required this.mobileUsername,
+    required this.maintenanceRID,
   });
 
   @override
@@ -138,31 +140,32 @@ class ItemCardSpareCases extends StatelessWidget {
             top: 0,
             child: Center(
               child: SizedBox(
-                // width: 220,
-                // height: 100,
-                child: InkWell(
-                  child: const Icon(
-                    Icons.delete_forever_outlined, size: 33, color: Colors.red,
-                    // width: 80,
-                    // height: 80,
-                  ),
-                  onTap: () async {
-                    if (kDebugMode) {
-                      print(mobileUsername);
-                    }
-                    await api.deleteSpareCase(
-                        requestID, siteRequestId, spareRID, mobileUsername);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FinalStepRepairScreen(
-                              siteRequestId: siteRequestId,
-                              mobileUsername: mobileUsername,
-                              workOrderID: workOrderId)),
-                    );
-                  },
-                ),
-              ),
+                  child: mobileUsername == submitter
+                      ? InkWell(
+                          child: const Icon(
+                            Icons.delete_forever_outlined,
+                            size: 33,
+                            color: Colors.red,
+                          ),
+                          onTap: () async {
+                            if (kDebugMode) {
+                              print(mobileUsername);
+                            }
+                            await api.deleteSpareCase(requestID, siteRequestId,
+                                spareRID, mobileUsername);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FinalStepRepairScreen(
+                                        siteRequestId: siteRequestId,
+                                        mobileUsername: mobileUsername,
+                                        workOrderID: workOrderId,
+                                        maintenanceRID: maintenanceRID,
+                                      )),
+                            );
+                          },
+                        )
+                      : Container()),
             ),
           )
         ],

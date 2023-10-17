@@ -48,6 +48,7 @@ dependencies:
   bloc: ^8.1.2
   shimmer: ^3.0.0
   table_calendar: ^3.0.9
+  flutter_date_pickers: ^0.4.2
 
 
 

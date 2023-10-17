@@ -191,8 +191,7 @@ class StockScreenState extends State<StockScreen> {
                                 },
                               )
                             : const Center(
-                                child:
-                                    CircularProgressIndicator(), // Show CircularProgressIndicator if no data is available yet
+                                child: CircularProgressIndicator(),
                               ),
           ),
         ]));
