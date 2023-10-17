@@ -40,12 +40,12 @@ class Spares {
 
   Spares(
       {this.requestID,
-        this.submitter,
-        this.createDate,
-        this.spareCode,
-        this.partReplaced,
-        this.sparePrice,
-        this.spareRID});
+      this.submitter,
+      this.createDate,
+      this.spareCode,
+      this.partReplaced,
+      this.sparePrice,
+      this.spareRID});
 
   Spares.fromJson(Map<String, dynamic> json) {
     requestID = json['requestID'];

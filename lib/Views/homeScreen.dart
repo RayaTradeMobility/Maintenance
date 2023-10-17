@@ -59,7 +59,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       if (kDebugMode) {
                         print(widget.siteRequestId);
                         print(widget.mobileUsername);
-
                       }
                       Navigator.push(
                         context,
@@ -86,10 +85,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-
-                                HistoryScreen(
-                              siteRequestID: widget.siteRequestId, mobileUsername: widget.mobileUsername,
+                            builder: (context) => HistoryScreen(
+                              siteRequestID: widget.siteRequestId,
+                              mobileUsername: widget.mobileUsername,
                             ),
                           ),
                         );

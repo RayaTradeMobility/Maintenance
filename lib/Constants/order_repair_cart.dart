@@ -14,7 +14,8 @@ class CustomCardRepair extends StatelessWidget {
       product_Model,
       brand,
       siteRequestId,
-      maintenanceRID , priority;
+      maintenanceRID,
+      priority;
 
   const CustomCardRepair({
     Key? key,
@@ -26,7 +27,8 @@ class CustomCardRepair extends StatelessWidget {
     required this.brand,
     required this.siteRequestId,
     required this.mobileUsername,
-    required this.maintenanceRID, required this.priority,
+    required this.maintenanceRID,
+    required this.priority,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,6 @@ class CustomCardRepair extends StatelessWidget {
         if (kDebugMode) {
           print(work_Order_ID);
           print(mobileUsername);
-
         }
         Navigator.push(
           context,
@@ -65,24 +66,28 @@ class CustomCardRepair extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-
                         decoration: BoxDecoration(
                             color: Colors.red.withOpacity(.8),
                             borderRadius: BorderRadius.circular(20.0)),
-                        child:  Text('  $priority Priority  ' ,style: const TextStyle(color: Colors.white), ) ),
-
-                    Row(children: [Text(
-                      '$customerName : الاسم ',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      const Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                      ),],)
-
+                        child: Text(
+                          '  $priority Priority  ',
+                          style: const TextStyle(color: Colors.white),
+                        )),
+                    Row(
+                      children: [
+                        Text(
+                          '$customerName : الاسم ',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        const Icon(
+                          Icons.account_circle,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    )
                   ]),
               const SizedBox(
                 height: 7.0,
@@ -91,21 +96,21 @@ class CustomCardRepair extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-
-                    Row(children: [
-                      Text(
-                        '$mobile_Number :رقم الموبايل',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      const Icon(
-                        Icons.mobile_friendly,
-                        color: Colors.grey,
-                      ),
-                    ],)
-
+                    Row(
+                      children: [
+                        Text(
+                          '$mobile_Number :رقم الموبايل',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        const Icon(
+                          Icons.mobile_friendly,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    )
                   ]),
               const SizedBox(
                 height: 7.0,

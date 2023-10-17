@@ -20,7 +20,7 @@ class StockScreenState extends State<StockScreen> {
   API api = API();
   List<Stock> stockList = [];
   bool _isLoading = false;
-
+  List<Stock> filteredItemList = [];
   TextEditingController searchController = TextEditingController();
   List<TextEditingController> controllers = [];
 
@@ -37,8 +37,6 @@ class StockScreenState extends State<StockScreen> {
     super.initState();
     fetchStockCases();
   }
-
-  List<Stock> filteredItemList = [];
 
   void filterCrop(value) {
     setState(() {
