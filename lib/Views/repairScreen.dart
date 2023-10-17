@@ -265,12 +265,7 @@ class _RepairScreenState extends State<RepairScreen> {
             ),
             onPressed: () async {
               if (kDebugMode) {
-                  // print(widget.workOrderId);
-                  // print(widget.siteRequestId);
-                  // print(widget.maintenanceRID);
-                  // print(widget.mobileUsername);
                 filteredList = selectedSpareCodes.whereType<List>().toList();
-
                 convertedList = filteredList.map((list) {
                   return {
                     'spare_RID': list[0].toString(),
@@ -298,7 +293,6 @@ class _RepairScreenState extends State<RepairScreen> {
                       backgroundColor: Colors.grey,
                       textColor: Colors.white,
                       fontSize: 16.0);
-
                 }
                 if (res.code == '00') {
                   Fluttertoast.showToast(
@@ -309,7 +303,7 @@ class _RepairScreenState extends State<RepairScreen> {
                       backgroundColor: Colors.grey,
                       textColor: Colors.white,
                       fontSize: 16.0);
-               await  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => FinalStepRepairScreen(

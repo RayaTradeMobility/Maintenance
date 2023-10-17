@@ -50,14 +50,18 @@ class _FinalStepRepairScreenState extends State<FinalStepRepairScreen> {
   }
 
   Future<bool> onWillPop() {
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => RepairScreen(
-                workOrderId: widget.workOrderID,
-                siteRequestId: widget.siteRequestId,
-                mobileUsername: widget.mobileUsername,
-                maintenanceRID: widget.maintenanceRID)));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RepairScreen(
+          siteRequestId: widget.siteRequestId,
+          mobileUsername: widget.mobileUsername,
+          workOrderId: widget.workOrderID,
+          maintenanceRID: widget.maintenanceRID,
+        ),
+      ),
+      (route) => false,
+    );
 
     return Future.value(true);
   }
