@@ -56,9 +56,15 @@ class _RepairScreenState extends State<RepairScreen> {
   Future<void> fetchRepairCases() async {
     RecommendationModel fetchedRecommendation =
         await api.fetchRepairCases(widget.workOrderId, widget.siteRequestId);
+
     setState(() {
-      sparesList = fetchedRecommendation.spares!;
-      _isLoading = true;
+      if (fetchedRecommendation.spares == null) {
+        sparesList = [];
+        _isLoading = true;
+      } else if (fetchedRecommendation.spares != null) {
+        sparesList = fetchedRecommendation.spares!;
+        _isLoading = true;
+      }
     });
   }
 
@@ -149,110 +155,129 @@ class _RepairScreenState extends State<RepairScreen> {
                       ],
                     ),
                   )
-                : searchController.text.isEmpty
-                    ? ListView.builder(
-                        itemCount: sparesList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          controllers.add(TextEditingController());
-
-                          final Spares spares = sparesList[index];
-
-                          return RepairCart(
-                            model: spares.model!,
-                            offering: spares.offering!,
-                            spareCode: spares.spareCode!,
-                            spareDescription: spares.spareDescription!,
-                            ccTReference: spares.ccTReference!,
-                            cost: spares.cost!,
-                            finalPrice: spares.finalPrice!,
-                            campaignFinalPrice: spares.campaignFinalPrice!,
-                            serviceCode: spares.serviceCode!,
-                            serviceLevel: spares.serviceLevel!,
-                            repairModule: spares.repairModule!,
-                            isChecked:
-                                selectedSpareCodes.contains(spares.spareRID),
-                            spareRID: spares.spareRID!,
-                            onChecked: (List<dynamic> selectedDropDown) {
-                              toggleSpareCode(spares.spareRID!);
-
-                              selectedSpareCodes.add(selectedDropDown);
-                            },
-                          );
-                        },
+                : sparesList.isEmpty && _isLoading == true
+                    ? Center(
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/noresult.png',
+                            ),
+                            const Text(
+                                'There is no Parts Available for this Case ')
+                          ],
+                        ),
                       )
-                    : searchController.text.isNotEmpty &&
-                            filteredItemList.isEmpty
-                        ? const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.search_off,
-                                      size: 80,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Center(
-                                      child: Text(
-                                        'No results found,\nPlease try different keyword',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
+                    : searchController.text.isEmpty
+                        ? ListView.builder(
+                            itemCount: sparesList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              controllers.add(TextEditingController());
+
+                              final Spares spares = sparesList[index];
+
+                              return RepairCart(
+                                model: spares.model!,
+                                offering: spares.offering!,
+                                spareCode: spares.spareCode!,
+                                spareDescription: spares.spareDescription!,
+                                ccTReference: spares.ccTReference!,
+                                cost: spares.cost!,
+                                finalPrice: spares.finalPrice!,
+                                campaignFinalPrice: spares.campaignFinalPrice!,
+                                serviceCode: spares.serviceCode!,
+                                serviceLevel: spares.serviceLevel!,
+                                repairModule: spares.repairModule!,
+                                isChecked: selectedSpareCodes
+                                    .contains(spares.spareRID),
+                                spareRID: spares.spareRID!,
+                                onChecked: (List<dynamic> selectedDropDown) {
+                                  toggleSpareCode(spares.spareRID!);
+
+                                  selectedSpareCodes.add(selectedDropDown);
+                                },
+                              );
+                            },
+                          )
+                        : searchController.text.isNotEmpty &&
+                                filteredItemList.isEmpty
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.search_off,
+                                          size: 80,
                                         ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Center(
+                                          child: Text(
+                                            'No results found,\nPlease try different keyword',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : filteredItemList.isNotEmpty
-                            ? ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: filteredItemList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  controllers.add(TextEditingController());
-
-                                  return RepairCart(
-                                    model: filteredItemList[index].model!,
-                                    offering: filteredItemList[index].offering!,
-                                    spareCode:
-                                        filteredItemList[index].spareCode!,
-                                    spareDescription: filteredItemList[index]
-                                        .spareDescription!,
-                                    ccTReference:
-                                        filteredItemList[index].ccTReference!,
-                                    cost: filteredItemList[index].cost!,
-                                    finalPrice:
-                                        filteredItemList[index].finalPrice!,
-                                    campaignFinalPrice: filteredItemList[index]
-                                        .campaignFinalPrice!,
-                                    serviceCode:
-                                        filteredItemList[index].serviceCode!,
-                                    serviceLevel:
-                                        filteredItemList[index].serviceLevel!,
-                                    repairModule:
-                                        filteredItemList[index].repairModule!,
-                                    isChecked: selectedSpareCodes.contains(
-                                        filteredItemList[index].spareRID),
-                                    onChecked:
-                                        (List<dynamic> selectedDropDown) {
-                                      toggleSpareCode(
-                                          filteredItemList[index].spareRID!);
-                                      selectedSpareCodes.add(selectedDropDown);
-                                    },
-                                    spareRID: filteredItemList[index].spareRID!,
-                                  );
-                                },
+                                ),
                               )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                            : filteredItemList.isNotEmpty
+                                ? ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: filteredItemList.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      controllers.add(TextEditingController());
+
+                                      return RepairCart(
+                                        model: filteredItemList[index].model!,
+                                        offering:
+                                            filteredItemList[index].offering!,
+                                        spareCode:
+                                            filteredItemList[index].spareCode!,
+                                        spareDescription:
+                                            filteredItemList[index]
+                                                .spareDescription!,
+                                        ccTReference: filteredItemList[index]
+                                            .ccTReference!,
+                                        cost: filteredItemList[index].cost!,
+                                        finalPrice:
+                                            filteredItemList[index].finalPrice!,
+                                        campaignFinalPrice:
+                                            filteredItemList[index]
+                                                .campaignFinalPrice!,
+                                        serviceCode: filteredItemList[index]
+                                            .serviceCode!,
+                                        serviceLevel: filteredItemList[index]
+                                            .serviceLevel!,
+                                        repairModule: filteredItemList[index]
+                                            .repairModule!,
+                                        isChecked: selectedSpareCodes.contains(
+                                            filteredItemList[index].spareRID),
+                                        onChecked:
+                                            (List<dynamic> selectedDropDown) {
+                                          toggleSpareCode(
+                                              filteredItemList[index]
+                                                  .spareRID!);
+                                          selectedSpareCodes
+                                              .add(selectedDropDown);
+                                        },
+                                        spareRID:
+                                            filteredItemList[index].spareRID!,
+                                      );
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(

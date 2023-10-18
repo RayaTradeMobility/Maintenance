@@ -386,7 +386,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                       style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 13)),
+                                          fontSize: 12)),
                                   const SizedBox(
                                     width: 5.0,
                                   ),

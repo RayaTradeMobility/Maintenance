@@ -82,6 +82,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       image: 'assets/history.png',
                       text: 'السجل',
                       onPressed: () {
+                        if (kDebugMode) {
+                          print(widget.siteRequestId);
+                          print(widget.mobileUsername);
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(

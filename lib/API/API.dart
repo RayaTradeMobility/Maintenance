@@ -132,8 +132,6 @@ class API {
     if (kDebugMode) {
       print('Print ${response.statusCode}');
       print(response.body);
-      print(request.headers);
-      print(request.files);
     }
 
     if (response.statusCode == 200) {
@@ -144,9 +142,6 @@ class API {
     } else {
       if (kDebugMode) {
         print('Print ${response.statusCode}');
-        print(response.body);
-        print(request.headers);
-        print(request.files);
       }
 
       throw Exception('Failed to post data');
