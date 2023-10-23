@@ -1,9 +1,7 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 import 'package:collapsible/collapsible.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../API/API.dart';
 import '../Constants/Constants.dart';
 import '../Constants/installation_alert_dialog.dart';
@@ -53,7 +51,13 @@ class _InstallationScreenState extends State<InstallationScreen>
   API api = API();
   bool _collapse = false, collapse = false;
   TextEditingController commentController = TextEditingController();
-  TextEditingController commentForCancelController = TextEditingController();
+  TextEditingController commentToAddController = TextEditingController();
+  TextEditingController commentToChangeModelController =
+      TextEditingController();
+  TextEditingController commentToChangeBrandController =
+      TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -70,27 +74,6 @@ class _InstallationScreenState extends State<InstallationScreen>
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialogPage(
-                      requestId: widget.requestID,
-                      mobileUsername: widget.mobileUsername,
-                    );
-                  });
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(4), bottom: Radius.circular(5)),
-              ),
-            ),
-            child: const Text('طلب'),
-          ),
-          ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: MyColorsSample.primary.withOpacity(0.8),
@@ -104,11 +87,11 @@ class _InstallationScreenState extends State<InstallationScreen>
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Cancel Spare'),
+                    title: const Text('Add Cost'),
                     content: TextField(
-                      controller: commentForCancelController,
+                      controller: commentToAddController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter your comment',
+                        hintText: 'Enter your Cost',
                       ),
                     ),
                     actions: [
@@ -124,15 +107,11 @@ class _InstallationScreenState extends State<InstallationScreen>
                           ),
                         ),
                         onPressed: () async {
-                          if (kDebugMode) {
-                            // print(widget.workOrderID);
-                            print(widget.mobileUsername);
-                            print(commentController.text);
-                          }
-                          GetOrder res = await api.cancelSpareCaseInstallation(
-                              commentForCancelController.text,
-                              "widget.workOrderID",
-                              widget.mobileUsername);
+                          GetOrder res = await api.addCostInstallationCase(
+                            widget.requestID,
+                            widget.mobileUsername,
+                            commentToAddController.text,
+                          );
 
                           if (res.message == "Success") {
                             Fluttertoast.showToast(
@@ -167,14 +146,83 @@ class _InstallationScreenState extends State<InstallationScreen>
                             Navigator.pop(context);
                           }
                         },
-                        child: const Text('Submit'),
+                        child: const Text('Add'),
                       ),
                     ],
                   );
                 },
               );
             },
-            child: const Text('Cancel'),
+            child: const Text('Add Cost'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialogPage(
+                      requestId: widget.requestID,
+                      mobileUsername: widget.mobileUsername,
+                    );
+                  });
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(4), bottom: Radius.circular(5)),
+              ),
+            ),
+            child: const Text('طلب'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(4), bottom: Radius.circular(5)),
+              ),
+            ),
+            onPressed: () async {
+              GetOrder res = await api.cancelSpareCaseInstallation(
+                  widget.requestID, widget.mobileUsername);
+
+              if (res.message == "Success") {
+                Fluttertoast.showToast(
+                    msg: "${res.message}",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.grey,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(
+                      siteRequestId: widget.siteRequestId,
+                      mobileUsername: widget.mobileUsername,
+                    ),
+                  ),
+                  (route) => false,
+                );
+              }
+              if (res.message != "Success") {
+                Fluttertoast.showToast(
+                    msg: res.message ?? "Something Went Wrong",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.grey,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Cancel Case'),
           ),
         ],
       ),
@@ -424,21 +472,6 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                               ],
                             ),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  ':القسم ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -447,7 +480,7 @@ class _InstallationScreenState extends State<InstallationScreen>
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${widget.category}:المركه ',
+                                  ' ${widget.category} :القسم ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
@@ -455,14 +488,264 @@ class _InstallationScreenState extends State<InstallationScreen>
                               ],
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.24,
+                                  height:
+                                      MediaQuery.of(context).size.height / 30,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: MyColorsSample.primary
+                                          .withOpacity(0.8),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(4),
+                                            bottom: Radius.circular(5)),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('تغيير المنتج'),
+                                            content: Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                controller:
+                                                    commentToChangeModelController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Enter your Model',
+                                                ),
+                                                validator: (comment) {
+                                                  if (isTextValid(comment!)) {
+                                                    return null;
+                                                  } else {
+                                                    return 'Please Select Model';
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  foregroundColor: Colors.white,
+                                                  backgroundColor:
+                                                      MyColorsSample.primary
+                                                          .withOpacity(0.8),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    4),
+                                                            bottom:
+                                                                Radius.circular(
+                                                                    5)),
+                                                  ),
+                                                ),
+                                                onPressed: () async {
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    GetOrder res = await api
+                                                        .changeModelOrBrand(
+                                                      widget.requestID,
+                                                      commentToChangeModelController
+                                                          .text,
+                                                      '',
+                                                    );
+
+                                                    if (res.message ==
+                                                        "Success") {
+                                                      Fluttertoast.showToast(
+                                                          msg: "${res.message}",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.grey,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0);
+
+                                                      Navigator.pop(context);
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                          msg: res.message ??
+                                                              "Something Went Wrong",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.grey,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0);
+
+                                                      Navigator.pop(context);
+                                                    }
+                                                  }
+                                                },
+                                                child: const Center(
+                                                    child: Text('تغيير')),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text('تغيير المنتج'),
+                                  ),
+                                ),
                                 const SizedBox(
                                   width: 5.0,
                                 ),
                                 Text(
-                                  '${widget.brand}  :المنتج ',
+                                  '${widget.model}  :المنتج ',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.24,
+                                  height:
+                                      MediaQuery.of(context).size.height / 30,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: MyColorsSample.primary
+                                          .withOpacity(0.8),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(4),
+                                            bottom: Radius.circular(5)),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('تغيير المركه'),
+                                            content: Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                validator: (comment) {
+                                                  if (isTextValid(comment!)) {
+                                                    return null;
+                                                  } else {
+                                                    return 'Please Select Brand';
+                                                  }
+                                                },
+                                                controller:
+                                                    commentToChangeBrandController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Enter your Brand',
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  foregroundColor: Colors.white,
+                                                  backgroundColor:
+                                                      MyColorsSample.primary
+                                                          .withOpacity(0.8),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    4),
+                                                            bottom:
+                                                                Radius.circular(
+                                                                    5)),
+                                                  ),
+                                                ),
+                                                onPressed: () async {
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    GetOrder res = await api
+                                                        .changeModelOrBrand(
+                                                      widget.requestID,
+                                                      '',
+                                                      commentToChangeBrandController
+                                                          .text,
+                                                    );
+
+                                                    if (res.message ==
+                                                        "Success") {
+                                                      Fluttertoast.showToast(
+                                                          msg: "${res.message}",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.grey,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0);
+
+                                                      Navigator.pop(context);
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                          msg: res.message ??
+                                                              "Something Went Wrong",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.grey,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0);
+
+                                                      Navigator.pop(context);
+                                                    }
+                                                  }
+                                                },
+                                                child: const Center(
+                                                    child: Text('تغيير')),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text('تغيير المركه'),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  '${widget.brand}  :المركه ',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
@@ -529,10 +812,38 @@ class _InstallationScreenState extends State<InstallationScreen>
                   ),
                 ),
               ),
+
+              // FloatingMenuPanel(
+              //     positionTop: MediaQuery.of(context).size.height - 200,
+              //     positionLeft: MediaQuery.of(context).size.width - 120,
+              //     //initial position to bottom right aligned
+              //
+              //     backgroundColor: Colors.redAccent,
+              //     panelIcon: Icons.menu,
+              //     onPressed: (index){
+              //       //on press action which gives pressed button index
+              //       print(index);
+              //       if(index == 0){
+              //         print("Message Button Pressed");
+              //       }else if(index == 1){
+              //         print("Camera Button Pressed");
+              //       }else if(index == 2){
+              //         print("Play Button Pressed");
+              //       }
+              //     },
+              //     buttons: [
+              //       // Add Icons to the buttons list.
+              //       Icons.message,
+              //       Icons.photo_camera,
+              //       Icons.video_library
+              //     ]
+              // ),
             ],
           )),
         ),
       ),
     );
   }
+
+  bool isTextValid(String comment) => comment.isNotEmpty;
 }

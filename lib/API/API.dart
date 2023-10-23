@@ -264,15 +264,18 @@ class API {
   }
 
   Future<GetOrder> cancelSpareCaseInstallation(
-    String comment,
-    String workOrderId,
+    String requestId,
     String userName,
   ) async {
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'text/plain'
+    };
+    var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            '$url/CancelCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/CancelAcInstallation'));
+    request.fields.addAll({'RequestId': requestId, 'UserName': userName});
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
@@ -281,13 +284,93 @@ class API {
     if (kDebugMode) {
       print(response.body);
 
-      print(request.body);
+      print(request.fields);
     }
     if (response.statusCode == 200) {
       return GetOrder.fromJson(jsonDecode(response.body));
     } else {
       if (kDebugMode) {
-        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> addCostInstallationCase(
+    String requestId,
+    String userName,
+    String cost,
+  ) async {
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'text/plain'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/AddCostToInstallCases'));
+    request.fields
+        .addAll({'RequestID': requestId, 'Username': userName, 'Cost': cost});
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+
+      print(request.fields);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> changeModelOrBrand(
+    String requestId,
+    String? model,
+    String? brand,
+  ) async {
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'text/plain'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'http://www.rayatrade.com/TechnicionMobileApi/api/User/ChangeModelOrBrand'));
+    if (model!.isNotEmpty && brand!.isEmpty) {
+      request.fields.addAll({
+        'RequestID': requestId,
+        'Model': model,
+      });
+    } else if (brand!.isNotEmpty && model.isEmpty) {
+      request.fields.addAll({
+        'RequestID': requestId,
+        'Brand': brand,
+      });
+    }
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+
+      print(request.fields);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
         print(response.body);
       }
 
