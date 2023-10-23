@@ -144,7 +144,7 @@ class _OrderScreenState extends State<OrderScreen>
                                     childAspectRatio: 3 / 1,
                                     crossAxisCount: 1,
                                     children: List.generate(
-                                      4,
+                                      5,
                                       (index) => Shimmer.fromColors(
                                         baseColor: Colors.grey[300]!,
                                         highlightColor: Colors.grey[100]!,
@@ -208,6 +208,7 @@ class _OrderScreenState extends State<OrderScreen>
                                         .symptomCategory!,
                                     request_ID:
                                         installationList[index].requestID!,
+                                    siteRequestId: widget.siteRequestId,
                                   );
                                 }
                                 if (index == 0) {
@@ -254,7 +255,7 @@ class _OrderScreenState extends State<OrderScreen>
                                     childAspectRatio: 3 / 1,
                                     crossAxisCount: 1,
                                     children: List.generate(
-                                      4,
+                                      5,
                                       (index) => Shimmer.fromColors(
                                         baseColor: Colors.grey[300]!,
                                         highlightColor: Colors.grey[100]!,

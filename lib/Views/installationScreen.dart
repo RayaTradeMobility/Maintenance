@@ -1,9 +1,14 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 import 'package:collapsible/collapsible.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../API/API.dart';
 import '../Constants/Constants.dart';
 import '../Constants/installation_alert_dialog.dart';
+import '../Models/get_order_model.dart';
+import 'homeScreen.dart';
 
 class InstallationScreen extends StatefulWidget {
   final String mobileUsername,
@@ -17,7 +22,8 @@ class InstallationScreen extends StatefulWidget {
       category,
       brand,
       symptomCategory,
-      requestID;
+      requestID,
+      siteRequestId;
 
   const InstallationScreen(
       {Key? key,
@@ -32,7 +38,8 @@ class InstallationScreen extends StatefulWidget {
       required this.category,
       required this.brand,
       required this.symptomCategory,
-      required this.requestID})
+      required this.requestID,
+      required this.siteRequestId})
       : super(key: key);
 
   @override
@@ -43,8 +50,10 @@ class _InstallationScreenState extends State<InstallationScreen>
     with SingleTickerProviderStateMixin {
   Widget customSearchBar = const Text("التركيب");
 
+  API api = API();
   bool _collapse = false, collapse = false;
   TextEditingController commentController = TextEditingController();
+  TextEditingController commentForCancelController = TextEditingController();
 
   @override
   void initState() {
@@ -80,6 +89,92 @@ class _InstallationScreenState extends State<InstallationScreen>
               ),
             ),
             child: const Text('طلب'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(4), bottom: Radius.circular(5)),
+              ),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Cancel Spare'),
+                    content: TextField(
+                      controller: commentForCancelController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your comment',
+                      ),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor:
+                              MyColorsSample.primary.withOpacity(0.8),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(4),
+                                bottom: Radius.circular(5)),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (kDebugMode) {
+                            // print(widget.workOrderID);
+                            print(widget.mobileUsername);
+                            print(commentController.text);
+                          }
+                          GetOrder res = await api.cancelSpareCaseInstallation(
+                              commentForCancelController.text,
+                              "widget.workOrderID",
+                              widget.mobileUsername);
+
+                          if (res.message == "Success") {
+                            Fluttertoast.showToast(
+                                msg: "${res.message}",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.grey,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(
+                                  siteRequestId: widget.siteRequestId,
+                                  mobileUsername: widget.mobileUsername,
+                                ),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                          if (res.message != "Success") {
+                            Fluttertoast.showToast(
+                                msg: res.message ?? "Something Went Wrong",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.grey,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -406,6 +501,21 @@ class _InstallationScreenState extends State<InstallationScreen>
                                 ),
                                 Text(
                                   '${widget.symptomCategory} :نوع المشكله ',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  '${widget.requestID} :رقم الطلب',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),

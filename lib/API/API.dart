@@ -231,7 +231,39 @@ class API {
     }
   }
 
-  Future<GetOrder> cancelSpareCase(
+  Future<GetOrder> cancelSpareCaseRepair(
+    String comment,
+    String workOrderId,
+    String userName,
+  ) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            '$url/CancelCase?comment=$comment&WorkOrderID=$workOrderId&Username=$userName'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+
+      print(request.body);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
+    }
+  }
+
+  Future<GetOrder> cancelSpareCaseInstallation(
     String comment,
     String workOrderId,
     String userName,

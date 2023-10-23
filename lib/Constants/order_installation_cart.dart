@@ -16,7 +16,8 @@ class CustomCardInstallation extends StatelessWidget {
       category,
       brand,
       symptomCategory,
-      request_ID;
+      request_ID,
+      siteRequestId;
 
   const CustomCardInstallation(
       {Key? key,
@@ -31,7 +32,8 @@ class CustomCardInstallation extends StatelessWidget {
       required this.category,
       required this.brand,
       required this.symptomCategory,
-      required this.request_ID})
+      required this.request_ID,
+      required this.siteRequestId})
       : super(key: key);
 
   @override
@@ -54,6 +56,7 @@ class CustomCardInstallation extends StatelessWidget {
                     brand: brand,
                     symptomCategory: symptomCategory,
                     requestID: request_ID,
+                    siteRequestId: siteRequestId,
                   )),
         );
       },

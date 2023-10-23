@@ -90,7 +90,7 @@ class StockScreenState extends State<StockScreen> {
                           childAspectRatio: 3 / 1,
                           crossAxisCount: 1,
                           children: List.generate(
-                            4,
+                            5,
                             (index) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,

@@ -112,7 +112,7 @@ class _FinalStepRepairScreenState extends State<FinalStepRepairScreen> {
                             print(widget.mobileUsername);
                             print(commentController.text);
                           }
-                          GetOrder res = await api.cancelSpareCase(
+                          GetOrder res = await api.cancelSpareCaseRepair(
                               commentController.text,
                               widget.workOrderID,
                               widget.mobileUsername);
