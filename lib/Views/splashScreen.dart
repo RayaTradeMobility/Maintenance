@@ -1,11 +1,11 @@
-// ignore_for_file: file_names
+import 'dart:async';
 
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:maintenance/Views/loginScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:maintenance/Views/loginScreen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -15,19 +15,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    Timer(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height * 1;
+
     return Scaffold(
-      body: Center(
-        child: AnimatedSplashScreen(
-          splash: Image.asset("assets/raya.png"),
-          nextScreen: const LoginScreen(),
-          duration: 3000,
-          backgroundColor: Colors.white,
-        ),
-      ),
-    );
+        backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/raya.png",
+              fit: BoxFit.cover,
+            ),
+            SizedBox(
+              height: height * 0.04,
+            ),
+            const SpinKitChasingDots(
+              color: Colors.blue,
+            )
+          ],
+        ));
   }
 }

@@ -2,15 +2,17 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maintenance/API/API.dart';
 import 'package:maintenance/Models/getRecommendationRepairModel.dart';
 import 'package:maintenance/Views/FinalStepRepairScreen.dart';
-
 import 'package:shimmer/shimmer.dart';
 import '../Constants/Constants.dart';
 import '../Constants/Repair_cart_item.dart';
+import '../Constants/reschedule_cart.dart';
 import '../Models/get_order_model.dart';
+import 'homeScreen.dart';
 
 class RepairScreen extends StatefulWidget {
   final String workOrderId, siteRequestId, mobileUsername, maintenanceRID;
@@ -37,6 +39,7 @@ class _RepairScreenState extends State<RepairScreen> {
   List<dynamic> selectedSpareCodes = [];
   List<dynamic> filteredList = [];
   API api = API();
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
@@ -81,6 +84,186 @@ class _RepairScreenState extends State<RepairScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SpeedDial(
+          icon: Icons.add,
+          backgroundColor: MyColorsSample.primary,
+          children: [
+            SpeedDialChild(
+              child:
+                  const Icon(Icons.schedule_send_outlined, color: Colors.white),
+              label: 'Reschedule Case',
+              backgroundColor: MyColorsSample.primary,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return RescheduleCartItem(
+                        workOrderID: widget.workOrderId,
+                        mobileUsername: widget.mobileUsername,
+                        siteRequestId: widget.siteRequestId);
+                  },
+                );
+              },
+            ),
+            SpeedDialChild(
+              child: const Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+              label: 'Cancel Case',
+              backgroundColor: MyColorsSample.primary,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Cancel Spare'),
+                      content: TextField(
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your comment',
+                        ),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                MyColorsSample.primary.withOpacity(0.8),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(4),
+                                  bottom: Radius.circular(5)),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (kDebugMode) {
+                              print(widget.workOrderId);
+                              print(widget.mobileUsername);
+                              print(commentController.text);
+                            }
+                            GetOrder res = await api.cancelSpareCaseRepair(
+                                commentController.text,
+                                widget.workOrderId,
+                                widget.mobileUsername);
+
+                            if (res.message == "Success") {
+                              Fluttertoast.showToast(
+                                  msg: "${res.message}",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(
+                                    siteRequestId: widget.siteRequestId,
+                                    mobileUsername: widget.mobileUsername,
+                                  ),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                            if (res.message != "Success") {
+                              Fluttertoast.showToast(
+                                  msg: res.message ?? "Something Went Wrong",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+            SpeedDialChild(
+              child: const Icon(Icons.done, color: Colors.white),
+              label: 'Finish Case',
+              backgroundColor: MyColorsSample.primary,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Finish Spare'),
+                      content: TextField(
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your comment',
+                        ),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                MyColorsSample.primary.withOpacity(0.8),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(4),
+                                  bottom: Radius.circular(5)),
+                            ),
+                          ),
+                          onPressed: () async {
+                            GetOrder res = await api.finishSpareCase(
+                                commentController.text,
+                                widget.workOrderId,
+                                widget.mobileUsername);
+
+                            if (res.message == "Success") {
+                              Fluttertoast.showToast(
+                                  msg: "${res.message}",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(
+                                    siteRequestId: widget.siteRequestId,
+                                    mobileUsername: widget.mobileUsername,
+                                  ),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                            if (res.message != "Success") {
+                              Fluttertoast.showToast(
+                                  msg: res.message ?? "Something Went Wrong",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.grey,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ]),
       backgroundColor: const Color.fromRGBO(229, 228, 226, 1),
       appBar: AppBar(
         backgroundColor: MyColorsSample.primary.withOpacity(0.8),
@@ -279,103 +462,109 @@ class _RepairScreenState extends State<RepairScreen> {
                                     child: CircularProgressIndicator(),
                                   ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: MyColorsSample.primary.withOpacity(0.8),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(4), bottom: Radius.circular(5)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: MyColorsSample.primary.withOpacity(0.8),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(4), bottom: Radius.circular(5)),
+                  ),
+                ),
+                onPressed: () async {
+                  if (kDebugMode) {
+                    filteredList =
+                        selectedSpareCodes.whereType<List>().toList();
+                    convertedList = filteredList.map((list) {
+                      return {
+                        'spare_RID': list[0].toString(),
+                        'sparetype': list[1],
+                        'repairIN': list[2],
+                      };
+                    }).toList();
+
+                    print(convertedList);
+                    print(filteredList);
+                  }
+                  if (convertedList.isNotEmpty) {
+                    GetOrder res = await api.saveOrderOneBulk(
+                        widget.workOrderId,
+                        widget.siteRequestId,
+                        convertedList,
+                        widget.maintenanceRID,
+                        widget.mobileUsername);
+                    if (res.message!.isEmpty) {
+                      Fluttertoast.showToast(
+                          msg: "Please Wait",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    }
+                    if (res.code == '00') {
+                      Fluttertoast.showToast(
+                          msg: res.message!,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FinalStepRepairScreen(
+                                  workOrderID: widget.workOrderId,
+                                  mobileUsername: widget.mobileUsername,
+                                  siteRequestId: widget.siteRequestId,
+                                  maintenanceRID: widget.maintenanceRID,
+                                )),
+                      );
+                      convertedList.clear();
+                      filteredList.clear();
+
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return FinalStepRepairScreen(
+                          siteRequestId: widget.siteRequestId,
+                          mobileUsername: widget.mobileUsername,
+                          workOrderID: widget.workOrderId,
+                          maintenanceRID: widget.maintenanceRID,
+                        );
+                      }));
+                    }
+                    {
+                      Fluttertoast.showToast(
+                          msg: res.message!,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    }
+                  }
+
+                  if (selectedSpareCodes.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "برجاء اختيار البيانات المطلوبه",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.grey,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                },
+                child: const Text("ِAdd Spare"),
               ),
-            ),
-            onPressed: () async {
-              if (kDebugMode) {
-                filteredList = selectedSpareCodes.whereType<List>().toList();
-                convertedList = filteredList.map((list) {
-                  return {
-                    'spare_RID': list[0].toString(),
-                    'sparetype': list[1],
-                    'repairIN': list[2],
-                  };
-                }).toList();
-
-                print(convertedList);
-                print(filteredList);
-              }
-              if (convertedList.isNotEmpty) {
-                GetOrder res = await api.saveOrderOneBulk(
-                    widget.workOrderId,
-                    widget.siteRequestId,
-                    convertedList,
-                    widget.maintenanceRID,
-                    widget.mobileUsername);
-                if (res.message!.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: "Please Wait",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-                if (res.code == '00') {
-                  Fluttertoast.showToast(
-                      msg: res.message!,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => FinalStepRepairScreen(
-                              workOrderID: widget.workOrderId,
-                              mobileUsername: widget.mobileUsername,
-                              siteRequestId: widget.siteRequestId,
-                              maintenanceRID: widget.maintenanceRID,
-                            )),
-                  );
-                  convertedList.clear();
-                  filteredList.clear();
-
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return FinalStepRepairScreen(
-                      siteRequestId: widget.siteRequestId,
-                      mobileUsername: widget.mobileUsername,
-                      workOrderID: widget.workOrderId,
-                      maintenanceRID: widget.maintenanceRID,
-                    );
-                  }));
-                }
-                {
-                  Fluttertoast.showToast(
-                      msg: res.message!,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-              }
-
-              if (selectedSpareCodes.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: "برجاء اختيار البيانات المطلوبه",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.grey,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-            },
-            child: const Text("متابعه"),
-          )
+            ],
+          ),
         ],
       ),
     );

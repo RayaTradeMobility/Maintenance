@@ -1,48 +1,45 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
-import 'package:maintenance/API/API.dart';
-import 'package:maintenance/Models/historyModel.dart';
+import 'package:maintenance/Constants/visit_action_alert.dart';
+import 'package:maintenance/Constants/visit_cart_item.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../API/API.dart';
 import '../Constants/Constants.dart';
-import '../Constants/history_cart_item.dart';
+import '../Models/visit_model.dart';
 
-class HistoryScreen extends StatefulWidget {
-  final String siteRequestID, mobileUsername;
+class VisitScreen extends StatefulWidget {
+  const VisitScreen(
+      {super.key, required this.mobileUsername, required this.siteRequestId});
 
-  const HistoryScreen(
-      {Key? key, required this.siteRequestID, required this.mobileUsername})
-      : super(key: key);
+  final String mobileUsername, siteRequestId;
 
   @override
-  HistoryScreenState createState() => HistoryScreenState();
+  State<VisitScreen> createState() => _VisitScreenState();
 }
 
-class HistoryScreenState extends State<HistoryScreen> {
-  late Future<HistoryModel> _futureData;
+class _VisitScreenState extends State<VisitScreen> {
+  late Future<VisitModel> _futureData;
   API api = API();
 
   @override
   void initState() {
     super.initState();
-    _futureData = api.fetchHistory(widget.siteRequestID, widget.mobileUsername);
+    _futureData = api.getVisit(widget.mobileUsername);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(229, 228, 226, 20),
       appBar: AppBar(
+        title: const Text("الزيارات"),
         backgroundColor: MyColorsSample.primary.withOpacity(0.8),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
         ),
         shadowColor: Colors.black,
         centerTitle: true,
-        title: const Text("السجل"),
       ),
-      body: FutureBuilder<HistoryModel>(
+      body: FutureBuilder<VisitModel>(
         future: _futureData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -94,36 +91,38 @@ class HistoryScreenState extends State<HistoryScreen> {
             );
           }
 
-          if (snapshot.hasData && snapshot.data!.headerInfo!.code == '00') {
-            final historyModel = snapshot.data;
+          if (snapshot.hasData && snapshot.data!.code == '00') {
+            final visitModel = snapshot.data;
             return Column(
               children: [
-                SizedBox(
-                  height: 25,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "اجمالي الصيانه اليوم : ${historyModel!.sumMaintenanceAmount} جنيه",
-                        style: const TextStyle(
-                            fontStyle: FontStyle.normal,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: historyModel.orders!.length,
+                    itemCount: visitModel!.techVisits!.length,
                     itemBuilder: (context, index) {
-                      final order = historyModel.orders![index];
-                      return Card(
-                        child: HistoryCart(
-                          order.workOrderID!,
-                          order.workStatus!,
-                          order.maintenanceAmount!,
-                          order.maintenanceFinishTime!,
+                      final order = visitModel.techVisits![index];
+                      return InkWell(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return VisitAction(
+                                  requestId: order.requestID!,
+                                  mobileUsername: widget.mobileUsername,
+                                  siteRequestId: widget.siteRequestId,
+                                );
+                              });
+                        },
+                        child: Card(
+                          child: VisitCart(
+                            customerName: order.customerName!,
+                            mobile: order.customerMobile!,
+                            priority: order.priority!,
+                            requestId: order.requestID!,
+                            address: order.address!,
+                            symptom: order.symptom!,
+                            model: order.model!,
+                            gspn: order.gspn!,
+                          ),
                         ),
                       );
                     },
@@ -132,14 +131,12 @@ class HistoryScreenState extends State<HistoryScreen> {
               ],
             );
           } else if (snapshot.hasData &&
-              snapshot.data!.headerInfo!.code == '10' &&
-              snapshot.data!.headerInfo!.message ==
-                  "There is No Orders Available") {
+              snapshot.data!.code == '10' &&
+              snapshot.data!.message == "There is no Visits") {
             Padding(
               padding:
                   EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
-              child:
-                  Center(child: Text("${snapshot.data!.headerInfo!.message}")),
+              child: Center(child: Text("${snapshot.data!.message}")),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -200,7 +197,7 @@ class HistoryScreenState extends State<HistoryScreen> {
               const SizedBox(
                 height: 12,
               ),
-              Text("${snapshot.data!.headerInfo!.message}"),
+              Text("${snapshot.data!.message}"),
             ],
           ));
         },

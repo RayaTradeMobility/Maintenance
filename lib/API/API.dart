@@ -9,6 +9,7 @@ import 'package:maintenance/Models/getSparesOnCaseModel.dart';
 import 'package:maintenance/Models/installationcaseModel.dart';
 import 'package:maintenance/Models/repaircaseModel.dart';
 import 'package:maintenance/Models/stockModel.dart';
+import 'package:maintenance/Models/visit_model.dart';
 import '../Models/get_order_model.dart';
 import '../Models/historyModel.dart';
 import '../Models/loginModel.dart';
@@ -58,6 +59,53 @@ class API {
       return HistoryModel.fromJson(jsonMap);
     } else {
       throw Exception('Failed to load History order data');
+    }
+  }
+
+  Future<VisitModel> getVisit(String mobileUsername) async {
+    final response = await http
+        .get(Uri.parse('$url/GetTechVisits?Username=$mobileUsername'));
+
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+
+      return VisitModel.fromJson(jsonMap);
+    } else {
+      throw Exception('Failed to load Visit data');
+    }
+  }
+
+  Future<GetOrder> getVisitAction(String requestId, String scheduleTime,
+      String techStatus, String userName, String comment) async {
+    var headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'};
+    var request = http.Request('POST', Uri.parse('$url/TechVisitsAction'));
+    request.body = json.encode({
+      "username": userName,
+      "requestId": requestId,
+      "techStatus": techStatus,
+      "scheduleTime": scheduleTime,
+      "comment": comment
+    });
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      return GetOrder.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(request.body);
+        print(response.body);
+      }
+
+      throw Exception('Failed to get data');
     }
   }
 

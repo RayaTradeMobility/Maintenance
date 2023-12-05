@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:maintenance/Views/historyScreen.dart';
 import 'package:maintenance/Views/orderScreen.dart';
 import 'package:maintenance/Views/stockScreen.dart';
+import 'package:maintenance/Views/visit_screen.dart';
 
 import '../Constants/home_card.dart';
 
@@ -48,29 +49,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const Padding(
                 padding: EdgeInsets.all(5.0),
               ),
-              Center(
-                child: SizedBox(
-                  width: 190,
-                  height: 190,
-                  child: HomeCart(
-                    image: 'assets/order.png',
-                    text: 'الطلبات',
-                    onPressed: () {
-                      if (kDebugMode) {
-                        print(widget.siteRequestId);
-                        print(widget.mobileUsername);
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OrderScreen(
-                                mobileUsername: widget.mobileUsername,
-                                siteRequestId: widget.siteRequestId)),
-                      );
-                    },
-                  ),
-                ),
-              ),
+
+              // Center(
+              //   child: SizedBox(
+              //     width: 190,
+              //     height: 190,
+              //     child: HomeCart(
+              //       image: 'assets/order.png',
+              //       text: 'الطلبات',
+              //       onPressed: () {
+              //         if (kDebugMode) {
+              //           print(widget.siteRequestId);
+              //           print(widget.mobileUsername);
+              //         }
+              //         Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => OrderScreen(
+              //                   mobileUsername: widget.mobileUsername,
+              //                   siteRequestId: widget.siteRequestId)),
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
               GridView.count(
                   shrinkWrap: true,
                   mainAxisSpacing: 30.0,
@@ -78,6 +80,41 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   childAspectRatio: 1 / 1.35,
                   crossAxisCount: 2,
                   children: [
+                    HomeCart(
+                      image: 'assets/order.png',
+                      text: 'الطلبات',
+                      onPressed: () {
+                        if (kDebugMode) {
+                          print(widget.siteRequestId);
+                          print(widget.mobileUsername);
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderScreen(
+                                  mobileUsername: widget.mobileUsername,
+                                  siteRequestId: widget.siteRequestId)),
+                        );
+                      },
+                    ),
+                    HomeCart(
+                      image: 'assets/visiticon.png',
+                      text: 'الزيارات',
+                      onPressed: () {
+                        if (kDebugMode) {
+                          print(widget.siteRequestId);
+                          print(widget.mobileUsername);
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VisitScreen(
+                                    mobileUsername: widget.mobileUsername,
+                                    siteRequestId: widget.siteRequestId,
+                                  )),
+                        );
+                      },
+                    ),
                     HomeCart(
                       image: 'assets/history.png',
                       text: 'السجل',

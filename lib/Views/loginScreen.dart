@@ -164,7 +164,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                     filled: true,
-                    //<-- SEE HERE
                     fillColor: Colors.white,
                     hintText: "اسم المستخدم",
                     prefixIcon: const Icon(Icons.email),
@@ -199,7 +198,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   fillColor: Colors.white,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      // Based on passwordVisible state choose the icon
                       _passwordVisibility
                           ? Icons.visibility
                           : Icons.visibility_off,
