@@ -122,6 +122,9 @@ class _VisitScreenState extends State<VisitScreen> {
                             symptom: order.symptom!,
                             model: order.model!,
                             gspn: order.gspn!,
+                            serialNumber: order.serialNumber!,
+                            spareParts: order.spareParts!,
+                            warrantyStatus: order.warrantyStatus!,
                           ),
                         ),
                       );

@@ -36,6 +36,9 @@ class TechVisits {
   String? customerMobile;
   String? address;
   String? priority;
+  String? serialNumber;
+  String? spareParts;
+  String? warrantyStatus;
 
   TechVisits(
       {this.requestID,
@@ -45,7 +48,10 @@ class TechVisits {
       this.customerName,
       this.customerMobile,
       this.address,
-      this.priority});
+      this.priority,
+      this.serialNumber,
+      this.spareParts,
+      this.warrantyStatus});
 
   TechVisits.fromJson(Map<String, dynamic> json) {
     requestID = json['requestID'];
@@ -56,6 +62,11 @@ class TechVisits {
     customerMobile = json['customerMobile'];
     address = json['address'];
     priority = json['priority'];
+    serialNumber = json['serialNumber'];
+    spareParts = json['spareParts'];
+    warrantyStatus = json['warrantyStatus'];
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -68,6 +79,9 @@ class TechVisits {
     data['customerMobile'] = customerMobile;
     data['address'] = address;
     data['priority'] = priority;
+    data['serialNumber'] = serialNumber;
+    data['spareParts'] = spareParts;
+    data['warrantyStatus'] = warrantyStatus;
     return data;
   }
 }

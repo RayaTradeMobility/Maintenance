@@ -10,7 +10,7 @@ class VisitCart extends StatelessWidget {
       address,
       symptom,
       model,
-      gspn;
+      gspn, serialNumber,spareParts,warrantyStatus;
 
   const VisitCart(
       {super.key,
@@ -21,7 +21,10 @@ class VisitCart extends StatelessWidget {
       required this.address,
       required this.symptom,
       required this.model,
-      required this.gspn});
+      required this.gspn,
+      required this.serialNumber,
+      required this.spareParts,
+      required this.warrantyStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +115,27 @@ class VisitCart extends StatelessWidget {
                         Container(height: 10),
                         Text(
                           "GSPN: $gspn",
+                          maxLines: 2,
+                          style: MyTextSample.subhead(context)!
+                              .copyWith(color: Colors.white, fontSize: 12),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Serial Number: $serialNumber",
+                          maxLines: 2,
+                          style: MyTextSample.subhead(context)!
+                              .copyWith(color: Colors.white, fontSize: 12),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Spare Parts: $spareParts",
+                          maxLines: 2,
+                          style: MyTextSample.subhead(context)!
+                              .copyWith(color: Colors.white, fontSize: 12),
+                        ),
+                        Container(height: 10),
+                        Text(
+                          "Warranty Status: $warrantyStatus",
                           maxLines: 2,
                           style: MyTextSample.subhead(context)!
                               .copyWith(color: Colors.white, fontSize: 12),

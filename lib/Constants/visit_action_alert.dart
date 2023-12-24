@@ -33,7 +33,10 @@ List<String> status = [
   "Repair Completed",
   "Customer Reschedule",
   "Tech Reschedule",
-  "Cancelled"
+  "Cancelled",
+  "Visited and not repaired",
+  "Defect part or New malfunction",
+  "Installation Done"
 ];
 
 class _VisitActionState extends State<VisitAction> {
